@@ -163,6 +163,77 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://1p0ch.github.io/2020/04/01/ret2-dl/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="1p0ch">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="1p0ch">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/01/ret2-dl/" class="post-title-link" itemprop="url">ret2_dl</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-01 18:43:46 / 修改时间：18:44:41" itemprop="dateCreated datePublished" datetime="2020-04-01T18:43:46+08:00">2020-04-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/" itemprop="url" rel="index"><span itemprop="name">PWN</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>- 测试程序write.c</p>
+<p> ```<br>   #include&lt;stdio.h&gt;<br>   int main(){<br>   char buf[]=”1p0ch\n”;<br>   write(1,buf,strlen(buf));<br>   }<br>   //gcc write.c -m32 -z lazy -z noexecstack -no-pie -fno-stack-protector -o write<br> ```</p>
+<p> <img src="/.io//ret2_dl_1.png" alt="1"></p>
+<p> - <strong><em>\</em>.dynamic 0x8049f14**</strong><br> <strong><em>\</em>文件结构**</strong><br> ```<br> typedef struct {<br>   Elf32_Sword d_tag;<br>   union {<br>     Elf32_Word d_val;<br>     Elf32_Addr d_ptr;<br>   } d_un;<br> } Elf32_Dyn;<br> ```</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://1p0ch.github.io/2020/04/01/ret2_dl_runtime_resolve/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -364,7 +435,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
