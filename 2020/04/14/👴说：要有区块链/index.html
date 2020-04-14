@@ -28,7 +28,7 @@
 <meta property="og:description" content="懒🐕的爷不到DDL是⑧可能开始工作的，今日DDL将近，不得不开始光速入门。而或环境崩坏，有此记录，亦便于日后重建。链来！">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-04-14T07:40:31.000Z">
-<meta property="article:modified_time" content="2020-04-14T09:38:25.878Z">
+<meta property="article:modified_time" content="2020-04-14T10:21:00.775Z">
 <meta property="article:author" content="1p0ch">
 <meta property="article:tag" content="环境搭建">
 <meta property="article:tag" content="Hyperledger">
@@ -199,7 +199,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-04-14 15:40:31 / 修改时间：17:38:25" itemprop="dateCreated datePublished" datetime="2020-04-14T15:40:31+08:00">2020-04-14</time>
+              <time title="创建时间：2020-04-14 15:40:31 / 修改时间：18:21:00" itemprop="dateCreated datePublished" datetime="2020-04-14T15:40:31+08:00">2020-04-14</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -224,7 +224,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.7k</span>
+              <span>1.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -264,9 +264,12 @@
   <strong>是⑧是发现docker-compose下载速度很慢？</strong><br>  下面是<a href="https://www.btis.site/2020/03/02/Docker-learning/#%E4%BA%8B%E4%BB%B6%E8%AE%B0%E5%BD%95" target="_blank" rel="noopener">豪子哥</a>推荐的光速安装docker-compose法<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">yum -y install epel-release</span><br><span class="line">yum -y install python2-pip</span><br><span class="line">yum -y install python3-pip</span><br><span class="line">pip3 install --upgrade pip</span><br><span class="line">yum install python3-devel -y</span><br><span class="line">yum install -y gcc</span><br><span class="line">yum install -y libffi-devel python3-devel openssl-devel</span><br><span class="line">pip install docker-compose</span><br><span class="line">docker-compose version</span><br></pre></td></tr></table></figure></li>
 <li>go语言<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -c https:&#x2F;&#x2F;studygolang.com&#x2F;dl&#x2F;golang&#x2F;go1.13.10.linux-amd64.tar.gz</span><br><span class="line">tar -C &#x2F;opt&#x2F; -zxvf go1.13.10.linux-amd64.tar.gz</span><br></pre></td></tr></table></figure>
   添加go进入环境变量<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim ~&#x2F;.bash_profile</span><br><span class="line">#写入以下内容</span><br><span class="line">export GOROOT&#x3D;&#x2F;opt&#x2F;go</span><br><span class="line">export PATH&#x3D;$PATH:$GOROOT&#x2F;bin</span><br><span class="line">export GOPATH&#x3D;~&#x2F;gopath</span><br></pre></td></tr></table></figure>
-  加载环境变量并验证<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">. ~&#x2F;.bash_profile</span><br><span class="line">go version</span><br></pre></td></tr></table></figure></li>
-</ul>
+  加载环境变量并验证<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">. ~&#x2F;.bash_profile</span><br><span class="line">go version</span><br></pre></td></tr></table></figure>
 
+</li>
+</ul>
+<p><strong>拉取the Fabric Samples and binaries</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;opt</span><br><span class="line">mkdir hyperledger</span><br><span class="line">curl -sSL https:&#x2F;&#x2F;bit.ly&#x2F;2ysbOFE | bash -s</span><br></pre></td></tr></table></figure>
     </div>
 
     
