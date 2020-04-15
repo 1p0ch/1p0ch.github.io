@@ -28,7 +28,7 @@
 <meta property="og:description" content="懒🐕的爷不到DDL是⑧可能开始工作的，近日DDL将近，不得不开始光速入门。而或环境崩坏，有此记录，亦便于日后重建。链来！">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-04-14T07:40:31.000Z">
-<meta property="article:modified_time" content="2020-04-15T12:42:02.161Z">
+<meta property="article:modified_time" content="2020-04-15T12:42:47.513Z">
 <meta property="article:author" content="1p0ch">
 <meta property="article:tag" content="环境搭建">
 <meta property="article:tag" content="Hyperledger">
@@ -219,7 +219,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-15 20:42:02" itemprop="dateModified" datetime="2020-04-15T20:42:02+08:00">2020-04-15</time>
+                <time title="修改时间：2020-04-15 20:42:47" itemprop="dateModified" datetime="2020-04-15T20:42:47+08:00">2020-04-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -302,7 +302,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker pull hyperledger&#x2F;fabric-tools</span><br><span class="line">docker pull hyperledger&#x2F;fabric-couchdb</span><br><span class="line">docker pull hyperledger&#x2F;fabric-kafka</span><br><span class="line">docker pull hyperledger&#x2F;fabric-zookeeper</span><br><span class="line">docker pull hyperledger&#x2F;fabric-orderer</span><br><span class="line">docker pull hyperledger&#x2F;fabric-javaenv</span><br><span class="line">docker pull hyperledger&#x2F;fabric-ccenv</span><br><span class="line">docker pull hyperledger&#x2F;fabric-ca</span><br><span class="line">docker pull hyperledger&#x2F;fabric-baseos</span><br><span class="line">docker pull hyperledger&#x2F;fabric-baseimage</span><br><span class="line">docker pull hyperledger&#x2F;fabric-membersrvc</span><br></pre></td></tr></table></figure>
 <p>  <strong>所有的镜像文件及版本号修改完成后，执行如下命令：</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
-<p>  为了方便docker-compose的配置，我们将所有的镜像tag都改为latest，执行如下格式的命令</p>
+<p>  为了方便docker-compose的配置，我们将所有的镜像tag都改为latest，执行如下格式的命令(这里我们由于默认下载的都是最新版本，就不用修改了，可以直接进行备份镜像)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker tag IMAGEID(镜像id) REPOSITORY:TAG（仓库：标签）</span><br><span class="line">docker tag 0403fd1c72c7 docker.io&#x2F;hyperledger&#x2F;fabric-tools:latest</span><br><span class="line">**镜像备份和拷贝**</span><br><span class="line">1.查看所有的镜像</span><br><span class="line">docker images        </span><br><span class="line">2.保存镜像</span><br><span class="line">docker save 6830dcd7b9b5&gt; &#x2F;tmp&#x2F;docker&#x2F;fabric-images&#x2F;peer.tar        </span><br><span class="line">3.加载镜像</span><br><span class="line">docker load &lt; &#x2F;tmp&#x2F;docker&#x2F;fabric-peer.tar</span><br><span class="line">镜像加载完成后，可根据之前的方案，将镜像tag都改为lastest。</span><br></pre></td></tr></table></figure></li>
 </ul>
 
