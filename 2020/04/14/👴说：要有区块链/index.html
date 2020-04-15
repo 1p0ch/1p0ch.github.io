@@ -28,7 +28,7 @@
 <meta property="og:description" content="懒🐕的爷不到DDL是⑧可能开始工作的，近日DDL将近，不得不开始光速入门。而或环境崩坏，有此记录，亦便于日后重建。链来！">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-04-14T07:40:31.000Z">
-<meta property="article:modified_time" content="2020-04-15T11:34:01.704Z">
+<meta property="article:modified_time" content="2020-04-15T11:34:22.462Z">
 <meta property="article:author" content="1p0ch">
 <meta property="article:tag" content="环境搭建">
 <meta property="article:tag" content="Hyperledger">
@@ -219,7 +219,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-15 19:34:01" itemprop="dateModified" datetime="2020-04-15T19:34:01+08:00">2020-04-15</time>
+                <time title="修改时间：2020-04-15 19:34:22" itemprop="dateModified" datetime="2020-04-15T19:34:22+08:00">2020-04-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -297,12 +297,10 @@
 </ul>
 <p><strong>注意，这里下载下来的文件要放在之前配置go环境的GOPATH文件夹里（比如这里就是~/gopath文件夹中）</strong></p>
 <ul>
-<li>下一步就是拉取相应的docker镜像：(这里我们不写版本号就会自动拉取最新的)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker pull hyperledger&#x2F;fabric-tools</span><br><span class="line">docker pull hyperledger&#x2F;fabric-couchdb</span><br><span class="line">docker pull hyperledger&#x2F;fabric-kafka</span><br><span class="line">docker pull hyperledger&#x2F;fabric-zookeeper</span><br><span class="line">docker pull hyperledger&#x2F;fabric-orderer</span><br><span class="line">docker pull hyperledger&#x2F;fabric-javaenv</span><br><span class="line">docker pull hyperledger&#x2F;fabric-ccenv</span><br><span class="line">docker pull hyperledger&#x2F;fabric-ca</span><br><span class="line">docker pull hyperledger&#x2F;fabric-baseos</span><br><span class="line">docker pull hyperledger&#x2F;fabric-baseimage</span><br><span class="line">docker pull hyperledger&#x2F;fabric-membersrvc</span><br></pre></td></tr></table></figure></li>
+<li>下一步就是拉取相应的docker镜像：(这里我们不写版本号就会自动拉取最新的)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker pull hyperledger&#x2F;fabric-tools</span><br><span class="line">docker pull hyperledger&#x2F;fabric-couchdb</span><br><span class="line">docker pull hyperledger&#x2F;fabric-kafka</span><br><span class="line">docker pull hyperledger&#x2F;fabric-zookeeper</span><br><span class="line">docker pull hyperledger&#x2F;fabric-orderer</span><br><span class="line">docker pull hyperledger&#x2F;fabric-javaenv</span><br><span class="line">docker pull hyperledger&#x2F;fabric-ccenv</span><br><span class="line">docker pull hyperledger&#x2F;fabric-ca</span><br><span class="line">docker pull hyperledger&#x2F;fabric-baseos</span><br><span class="line">docker pull hyperledger&#x2F;fabric-baseimage</span><br><span class="line">docker pull hyperledger&#x2F;fabric-membersrvc</span><br></pre></td></tr></table></figure>
+  <strong>所有的镜像文件及版本号修改完成后，执行如下命令：</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+  为了方便docker-compose的配置，我们将所有的镜像tag都改为latest，执行如下格式的命令<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker tag IMAGEID(镜像id) REPOSITORY:TAG（仓库：标签）</span><br><span class="line">docker tag 0403fd1c72c7 docker.io&#x2F;hyperledger&#x2F;fabric-tools:latest</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line">      </span><br><span class="line">	**镜像备份和拷贝**</span><br></pre></td></tr></table></figure></li>
 </ul>
-<p><strong>所有的镜像文件及版本号修改完成后，执行如下命令：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
-<p>为了方便docker-compose的配置，我们将所有的镜像tag都改为latest，执行如下格式的命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker tag IMAGEID(镜像id) REPOSITORY:TAG（仓库：标签）</span><br><span class="line">docker tag 0403fd1c72c7 docker.io&#x2F;hyperledger&#x2F;fabric-tools:latest</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line">      </span><br><span class="line">**镜像备份和拷贝**</span><br></pre></td></tr></table></figure>
 <p>1.查看所有的镜像<br>docker images</p>
 <p>2.保存镜像<br>docker save 6830dcd7b9b5&gt; /tmp/docker/fabric-images/peer.tar</p>
 <p>3.加载镜像<br>docker load &lt; /tmp/docker/fabric-peer.tar<br>镜像加载完成后，可根据之前的方案，将镜像tag都改为lastest。<br>```</p>
