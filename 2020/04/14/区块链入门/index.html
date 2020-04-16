@@ -28,7 +28,7 @@
 <meta property="og:description" content="懒🐕的爷不到DDL是⑧可能开始工作的，近日DDL将近，不得不开始光速入门。而或环境崩坏，有此记录，亦便于日后重建。链来！">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-04-14T07:40:31.000Z">
-<meta property="article:modified_time" content="2020-04-16T12:07:05.940Z">
+<meta property="article:modified_time" content="2020-04-16T12:33:30.076Z">
 <meta property="article:author" content="1p0ch">
 <meta property="article:tag" content="环境搭建">
 <meta property="article:tag" content="Hyperledger">
@@ -219,7 +219,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-16 20:07:05" itemprop="dateModified" datetime="2020-04-16T20:07:05+08:00">2020-04-16</time>
+                <time title="修改时间：2020-04-16 20:33:30" itemprop="dateModified" datetime="2020-04-16T20:33:30+08:00">2020-04-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -304,7 +304,10 @@
   删除之前运行的容器<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;network.sh down</span><br></pre></td></tr></table></figure>
   运行命令启动网络<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;network.sh up</span><br></pre></td></tr></table></figure>
   <strong>注意这里有可能遇到了一个错误：Fabric Docker image version of 1.4.6 does not match the versions supported by the test network.</strong><br>  解决方案是使用上面的脚本拉取镜像，放弃手动拉取docker镜像<br>  <strong>如果出现以下的字样，则说明你已经成功搭建了2.0的环境</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE                               COMMAND             CREATED             STATUS                  PORTS                              NAMES</span><br><span class="line">b8912b452ca9        hyperledger&#x2F;fabric-orderer:latest   &quot;orderer&quot;           2 seconds ago       Up Less than a second   0.0.0.0:7050-&gt;7050&#x2F;tcp             orderer.example.com</span><br><span class="line">9e9ae4e89fa9        hyperledger&#x2F;fabric-peer:latest      &quot;peer node start&quot;   2 seconds ago       Up Less than a second   7051&#x2F;tcp, 0.0.0.0:9051-&gt;9051&#x2F;tcp   peer0.org2.example.com</span><br><span class="line">c6beb480a0d4        hyperledger&#x2F;fabric-peer:latest      &quot;peer node start&quot;   2 seconds ago       Up Less than a second   0.0.0.0:7051-&gt;7051&#x2F;tcp             peer0.org1.example.com</span><br></pre></td></tr></table></figure>
-</li>
+  查看创建的节点<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+  建立频道，下面的命令将创建默认名称频道mychannel<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;network.sh createChannel</span><br></pre></td></tr></table></figure>
+  看到successfully则说明创建成功<br>  如果想创建自定义频道，可以使用如下命令<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;network.sh createChannel -c &lt;name&gt;</span><br></pre></td></tr></table></figure>
+  在channel上启动链码<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">	</span><br></pre></td></tr></table></figure></li>
 </ul>
 
     </div>
