@@ -28,7 +28,7 @@
 <meta property="og:description" content="懒🐕的爷不到DDL是⑧可能开始工作的，近日DDL将近，不得不开始光速入门。而或环境崩坏，有此记录，亦便于日后重建。链来！">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-04-14T07:40:31.000Z">
-<meta property="article:modified_time" content="2020-04-16T09:16:49.875Z">
+<meta property="article:modified_time" content="2020-04-16T10:56:40.950Z">
 <meta property="article:author" content="1p0ch">
 <meta property="article:tag" content="环境搭建">
 <meta property="article:tag" content="Hyperledger">
@@ -219,7 +219,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-16 17:16:49" itemprop="dateModified" datetime="2020-04-16T17:16:49+08:00">2020-04-16</time>
+                <time title="修改时间：2020-04-16 18:56:40" itemprop="dateModified" datetime="2020-04-16T18:56:40+08:00">2020-04-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -244,7 +244,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.9k</span>
+              <span>4.1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -300,11 +300,11 @@
 <p>  <strong>接下来要设置权限并把bins中内容添加到path环境变量（此时在fabric-samples目录下）</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 *.*</span><br><span class="line">export PATH=/root/gopath/hyperledger/fabric-samples/bin:$PATH</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>下一步就是拉取相应的docker镜像：(这里我们不写版本号就会自动拉取最新的)</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker pull hyperledger/fabric-tools</span><br><span class="line">docker pull hyperledger/fabric-couchdb</span><br><span class="line">docker pull hyperledger/fabric-kafka</span><br><span class="line">docker pull hyperledger/fabric-zookeeper</span><br><span class="line">docker pull hyperledger/fabric-orderer</span><br><span class="line">docker pull hyperledger/fabric-javaenv</span><br><span class="line">docker pull hyperledger/fabric-ccenv</span><br><span class="line">docker pull hyperledger/fabric-ca</span><br><span class="line">docker pull hyperledger/fabric-baseos</span><br><span class="line">docker pull hyperledger/fabric-baseimage</span><br><span class="line">docker pull hyperledger/fabric-membersrvc</span><br></pre></td></tr></table></figure>
+<li><p>下一步就是拉取相应的docker镜像：(这里我们拉取2.0.0 1.4.4 0.4.18版本的镜像)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">docker pull hyperledger/fabric-tools:2.0.0</span><br><span class="line">docker pull hyperledger/fabric-couchdb:0.4.18</span><br><span class="line">docker pull hyperledger/fabric-kafka:0.4.18</span><br><span class="line">docker pull hyperledger/fabric-zookeeper:0.4.18</span><br><span class="line">docker pull hyperledger/fabric-orderer:2.0.0</span><br><span class="line">docker pull hyperledger/fabric-javaenv:2.0.0</span><br><span class="line">docker pull hyperledger/fabric-ccenv:2.0.0</span><br><span class="line">docker pull hyperledger/fabric-baseos:2.0.0</span><br><span class="line">docker pull hyperledger/fabric-baseimage:0.4.18</span><br><span class="line">docker pull hyperledger/fabric-membersrvc:2.0.0</span><br><span class="line">docker pull hyperledger/fabric-nodeenv:2.0.0</span><br><span class="line">docker pull hyperledger/fabric-peer:2.0.0</span><br><span class="line">docker pull hyperledger/fabric-ccenv:2.0.0</span><br><span class="line">docker pull hyperledger/fabric-ca:1.4.4</span><br></pre></td></tr></table></figure>
 <p>  <strong>所有的镜像文件及版本号修改完成后，执行如下命令：</strong>（注意这里不备份镜像也可以）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
-<p>  为了方便docker-compose的配置，我们将所有的镜像tag都改为latest，执行如下格式的命令(这里我们由于默认下载的都是最新版本，就不用修改了，可以直接进行备份镜像)</p>
+<p>  为了方便docker-compose的配置，我们将所有的镜像tag都改为latest，执行如下格式的命令(这里也可以选择不改)</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker tag IMAGEID(镜像id) REPOSITORY:TAG（仓库：标签）</span><br><span class="line">docker tag 0403fd1c72c7 docker.io/hyperledger/fabric-tools:latest</span><br><span class="line">**镜像备份和拷贝**</span><br><span class="line">1.查看所有的镜像</span><br><span class="line">docker images        </span><br><span class="line">2.保存镜像</span><br><span class="line">docker save 6830dcd7b9b5&gt; /tmp/docker/fabric-images/peer.tar        </span><br><span class="line">3.加载镜像</span><br><span class="line">docker load &lt; /tmp/docker/fabric-peer.tar</span><br><span class="line">镜像加载完成后，可根据之前的方案，将镜像tag都改为lastest。</span><br></pre></td></tr></table></figure>
 
 </li>
@@ -314,7 +314,7 @@
   设置权限并查看命令的使用方法<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 .&#x2F;network.sh</span><br><span class="line">.&#x2F;network.sh -h</span><br></pre></td></tr></table></figure>
   删除之前运行的容器<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;network.sh down</span><br></pre></td></tr></table></figure>
   运行命令启动网络<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;network.sh up</span><br></pre></td></tr></table></figure>
-  <strong>注意这里我们遇到了一个错误：Fabric Docker image version of 1.4.6 does not match the versions supported by the test network.</strong><br>  对此我们的解决方案是<pre><code></code></pre></li>
+  <strong>注意这里我们遇到了一个错误：Fabric Docker image version of 1.4.6 does not match the versions supported by the test network.</strong><br>  对此我们的解决方案是拉取2.0.0版本的镜像（之前错误拉取默认的1.4.6）<pre><code></code></pre></li>
 </ul>
 
     </div>
