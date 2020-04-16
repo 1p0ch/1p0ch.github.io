@@ -28,7 +28,7 @@
 <meta property="og:description" content="懒🐕的爷不到DDL是⑧可能开始工作的，近日DDL将近，不得不开始光速入门。而或环境崩坏，有此记录，亦便于日后重建。链来！">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-04-14T07:40:31.000Z">
-<meta property="article:modified_time" content="2020-04-16T08:15:11.831Z">
+<meta property="article:modified_time" content="2020-04-16T08:17:01.112Z">
 <meta property="article:author" content="1p0ch">
 <meta property="article:tag" content="环境搭建">
 <meta property="article:tag" content="Hyperledger">
@@ -219,7 +219,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-16 16:15:11" itemprop="dateModified" datetime="2020-04-16T16:15:11+08:00">2020-04-16</time>
+                <time title="修改时间：2020-04-16 16:17:01" itemprop="dateModified" datetime="2020-04-16T16:17:01+08:00">2020-04-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -297,17 +297,19 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hyperledger-fabric：</span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;hyperledger&#x2F;fabric&#x2F;releases&#x2F;download&#x2F;v2.0.0&#x2F;hyperledger-fabric-linux-amd64-2.0.0.tar.gz</span><br><span class="line">hyperledger-fabric-ca：</span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;hyperledger&#x2F;fabric-ca&#x2F;releases&#x2F;download&#x2F;v1.4.6&#x2F;hyperledger-fabric-ca-linux-amd64-1.4.6.tar.gz</span><br><span class="line">hyperledger-fabric-samples：</span><br><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;hyperledger&#x2F;fabric-samples.git</span><br></pre></td></tr></table></figure>
 <p>  <strong>注意，这里下载下来的文件要放在之前配置go环境的GOPATH文件夹下并解压（比如这里就是~/gopath文件夹中，所以我们可以在/gopath文件夹下面新建一个hyperledger文件夹，然后放到hyperledger文件夹里）</strong><br>  这里将samples放到hyperledger文件夹中，然后把其他两个文件中对应的bins和config内容加入到samples里对应文件夹中,这里由于使用xtfp直接传输就不作演示了</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ~/gopath</span><br><span class="line">mkdir hyperledger</span><br><span class="line">cd hyperledger</span><br></pre></td></tr></table></figure>
-<p>  <strong>接下来要把bins中内容添加到环境路径</strong></p>
+<p>  <strong>接下来要把bins中内容添加到path环境变量</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/root/gopath/hyperledger/fabric-samples/bin:$PATH</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>下一步就是拉取相应的docker镜像：(这里我们不写版本号就会自动拉取最新的)</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker pull hyperledger/fabric-tools</span><br><span class="line">docker pull hyperledger/fabric-couchdb</span><br><span class="line">docker pull hyperledger/fabric-kafka</span><br><span class="line">docker pull hyperledger/fabric-zookeeper</span><br><span class="line">docker pull hyperledger/fabric-orderer</span><br><span class="line">docker pull hyperledger/fabric-javaenv</span><br><span class="line">docker pull hyperledger/fabric-ccenv</span><br><span class="line">docker pull hyperledger/fabric-ca</span><br><span class="line">docker pull hyperledger/fabric-baseos</span><br><span class="line">docker pull hyperledger/fabric-baseimage</span><br><span class="line">docker pull hyperledger/fabric-membersrvc</span><br></pre></td></tr></table></figure>
-<p>  <strong>所有的镜像文件及版本号修改完成后，执行如下命令：</strong></p>
+<p>  <strong>所有的镜像文件及版本号修改完成后，执行如下命令：</strong>（注意这里不备份镜像也可以）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
 <p>  为了方便docker-compose的配置，我们将所有的镜像tag都改为latest，执行如下格式的命令(这里我们由于默认下载的都是最新版本，就不用修改了，可以直接进行备份镜像)</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker tag IMAGEID(镜像id) REPOSITORY:TAG（仓库：标签）</span><br><span class="line">docker tag 0403fd1c72c7 docker.io/hyperledger/fabric-tools:latest</span><br><span class="line">**镜像备份和拷贝**</span><br><span class="line">1.查看所有的镜像</span><br><span class="line">docker images        </span><br><span class="line">2.保存镜像</span><br><span class="line">docker save 6830dcd7b9b5&gt; /tmp/docker/fabric-images/peer.tar        </span><br><span class="line">3.加载镜像</span><br><span class="line">docker load &lt; /tmp/docker/fabric-peer.tar</span><br><span class="line">镜像加载完成后，可根据之前的方案，将镜像tag都改为lastest。</span><br></pre></td></tr></table></figure></li>
-</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker tag IMAGEID(镜像id) REPOSITORY:TAG（仓库：标签）</span><br><span class="line">docker tag 0403fd1c72c7 docker.io/hyperledger/fabric-tools:latest</span><br><span class="line">**镜像备份和拷贝**</span><br><span class="line">1.查看所有的镜像</span><br><span class="line">docker images        </span><br><span class="line">2.保存镜像</span><br><span class="line">docker save 6830dcd7b9b5&gt; /tmp/docker/fabric-images/peer.tar        </span><br><span class="line">3.加载镜像</span><br><span class="line">docker load &lt; /tmp/docker/fabric-peer.tar</span><br><span class="line">镜像加载完成后，可根据之前的方案，将镜像tag都改为lastest。</span><br></pre></td></tr></table></figure>
 
+</li>
+</ul>
+<h4 id="初步尝试"><a href="#初步尝试" class="headerlink" title="初步尝试"></a>初步尝试</h4>
     </div>
 
     
@@ -409,7 +411,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#环境准备："><span class="nav-number">1.</span> <span class="nav-text">环境准备：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考链接"><span class="nav-number">2.</span> <span class="nav-text">参考链接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#环境依赖"><span class="nav-number">3.</span> <span class="nav-text">环境依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开始搭建"><span class="nav-number">4.</span> <span class="nav-text">开始搭建</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#环境准备："><span class="nav-number">1.</span> <span class="nav-text">环境准备：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考链接"><span class="nav-number">2.</span> <span class="nav-text">参考链接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#环境依赖"><span class="nav-number">3.</span> <span class="nav-text">环境依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开始搭建"><span class="nav-number">4.</span> <span class="nav-text">开始搭建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#初步尝试"><span class="nav-number">5.</span> <span class="nav-text">初步尝试</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -488,7 +490,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">42k</span>
+    <span title="站点总字数">43k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
