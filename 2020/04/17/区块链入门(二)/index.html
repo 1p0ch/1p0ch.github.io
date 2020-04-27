@@ -28,7 +28,7 @@
 <meta property="og:description" content="本篇教程默认您已经阅读并按照区块链入门（一）中内容完成搭建和测试，若尚未阅读，请阅读上篇教程区块链入门（一）进行初步搭建和测试。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-04-17T12:11:31.000Z">
-<meta property="article:modified_time" content="2020-04-17T12:12:56.707Z">
+<meta property="article:modified_time" content="2020-04-27T15:03:55.013Z">
 <meta property="article:author" content="1p0ch">
 <meta property="article:tag" content="环境搭建">
 <meta property="article:tag" content="👶👶级教学">
@@ -210,11 +210,17 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-04-17 20:11:31 / 修改时间：20:12:56" itemprop="dateCreated datePublished" datetime="2020-04-17T20:11:31+08:00">2020-04-17</time>
+              <time title="创建时间：2020-04-17 20:11:31" itemprop="dateCreated datePublished" datetime="2020-04-17T20:11:31+08:00">2020-04-17</time>
             </span>
           
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-27 23:03:55" itemprop="dateModified" datetime="2020-04-27T23:03:55+08:00">2020-04-27</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -238,14 +244,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>64</span>
+              <span>3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -259,6 +265,27 @@
       
         <p>本篇教程默认您已经阅读并按照区块链入门（一）中内容完成搭建和测试，若尚未阅读，请阅读上篇教程<a href="https://1p0ch.cn/2020/04/14/%E5%8C%BA%E5%9D%97%E9%93%BE%E5%85%A5%E9%97%A8(%E4%B8%80)/#more" target="_blank" rel="noopener">区块链入门（一）</a>进行初步搭建和测试。</p>
 <a id="more"></a> 
+<h4 id="设置debug模式"><a href="#设置debug模式" class="headerlink" title="设置debug模式"></a>设置debug模式</h4><p>修改docker-compose-cli.yaml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">cli:</span><br><span class="line">  container_name: cli</span><br><span class="line">  image: hyperledger&#x2F;fabric-tools:$IMAGE_TAG</span><br><span class="line">  tty: true</span><br><span class="line">  stdin_open: true</span><br><span class="line">  environment:</span><br><span class="line">    - GOPATH&#x3D;&#x2F;opt&#x2F;gopath</span><br><span class="line">    - CORE_VM_ENDPOINT&#x3D;unix:&#x2F;&#x2F;&#x2F;host&#x2F;var&#x2F;run&#x2F;docker.sock</span><br><span class="line">    - FABRIC_LOGGING_SPEC&#x3D;DEBUG</span><br><span class="line">    #- FABRIC_LOGGING_SPEC&#x3D;INFO</span><br></pre></td></tr></table></figure>
+<h4 id="生成msp证书"><a href="#生成msp证书" class="headerlink" title="生成msp证书"></a>生成msp证书</h4><p>此时默认当前目录下crypto-config.yaml已经配置好</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cryptogen generate --config&#x3D;.&#x2F;crypto-config.yaml</span><br></pre></td></tr></table></figure>
+<h4 id="生成排序服务创世区块"><a href="#生成排序服务创世区块" class="headerlink" title="生成排序服务创世区块"></a>生成排序服务创世区块</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export FABRIC_CFG_PATH&#x3D;$PWD</span><br><span class="line">configtxgen -profile SampleMultiNodeEtcdRaft -channelID byfn-sys-channel -outputBlock .&#x2F;channel-artifacts&#x2F;genesis.block</span><br></pre></td></tr></table></figure>
+<h4 id="生成通道配置创世区块"><a href="#生成通道配置创世区块" class="headerlink" title="生成通道配置创世区块"></a>生成通道配置创世区块</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export CHANNEL_NAME&#x3D;mychannel  &amp;&amp; configtxgen -profile TwoOrgsChannel -outputCreateChannelTx .&#x2F;channel-artifacts&#x2F;channel.tx -channelID $CHANNEL_NAME</span><br></pre></td></tr></table></figure>
+<h4 id="定义组织锚节点"><a href="#定义组织锚节点" class="headerlink" title="定义组织锚节点"></a>定义组织锚节点</h4><p>org1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate .&#x2F;channel-artifacts&#x2F;Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP</span><br></pre></td></tr></table></figure>
+<p>org2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate .&#x2F;channel-artifacts&#x2F;Org2MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org2MSP</span><br></pre></td></tr></table></figure>
+<h4 id="启动网络"><a href="#启动网络" class="headerlink" title="启动网络"></a>启动网络</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -f docker-compose-cli.yaml -f docker-compose-etcdraft2.yaml up -d</span><br></pre></td></tr></table></figure>
+<h4 id="创建并加入频道"><a href="#创建并加入频道" class="headerlink" title="创建并加入频道"></a>创建并加入频道</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it cli bash</span><br></pre></td></tr></table></figure>
+
+<p>设置peer0环境变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CORE_PEER_MSPCONFIGPATH&#x3D;&#x2F;root&#x2F;gopath&#x2F;hyperledger&#x2F;fabric-samples&#x2F;first-network&#x2F;crypto-config&#x2F;peerOrganizations&#x2F;org1.example.com&#x2F;users&#x2F;Admin@org1.example.com&#x2F;msp</span><br><span class="line">CORE_PEER_ADDRESS&#x3D;peer0.org1.example.com:7051</span><br><span class="line">CORE_PEER_LOCALMSPID&#x3D;&quot;Org1MSP&quot;</span><br><span class="line">CORE_PEER_TLS_ROOTCERT_FILE&#x3D;&#x2F;root&#x2F;gopath&#x2F;hyperledger&#x2F;fabric-samples&#x2F;first-network&#x2F;crypto-config&#x2F;peerOrganizations&#x2F;org1.example.com&#x2F;peers&#x2F;peer0.org1.example.com&#x2F;tls&#x2F;ca.crt</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CORE_PEER_MSPCONFIGPATH&#x3D;&#x2F;root&#x2F;gopath&#x2F;hyperledger&#x2F;fabric-samples&#x2F;first-network&#x2F;crypto-config&#x2F;peerOrganizations&#x2F;org1.example.com&#x2F;users&#x2F;Admin@org1.example.com&#x2F;msp</span><br><span class="line">CORE_PEER_ADDRESS&#x3D;peer0.org1.example.com:7051</span><br><span class="line">CORE_PEER_LOCALMSPID&#x3D;&quot;Org1MSP&quot;</span><br><span class="line">CORE_PEER_TLS_ROOTCERT_FILE&#x3D;&#x2F;root&#x2F;gopath&#x2F;hyperledger&#x2F;fabric-samples&#x2F;first-network&#x2F;crypto-config&#x2F;peerOrganizations&#x2F;org1.example.com&#x2F;peers&#x2F;peer0.org1.example.com&#x2F;tls&#x2F;ca.crt</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export CHANNEL_NAME&#x3D;mychannel</span><br><span class="line">peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f .&#x2F;channel-artifacts&#x2F;channel.tx --tls --cafile &#x2F;root&#x2F;gopath&#x2F;hyperledger&#x2F;fabric-samples&#x2F;first-network&#x2F;crypto-config&#x2F;ordererOrganizations&#x2F;example.com&#x2F;orderers&#x2F;orderer.example.com&#x2F;msp&#x2F;tlscacerts&#x2F;tlsca.example.com-cert.pem</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export CHANNEL_NAME&#x3D;mychannel</span><br><span class="line">peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f .&#x2F;channel-artifacts&#x2F;channel.tx --tls --cafile .&#x2F;crypto&#x2F;ordererOrganizations&#x2F;example.com&#x2F;orderers&#x2F;orderer.example.com&#x2F;msp&#x2F;tlscacerts&#x2F;tlsca.example.com-cert.pem</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -359,6 +386,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#设置debug模式"><span class="nav-number">1.</span> <span class="nav-text">设置debug模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成msp证书"><span class="nav-number">2.</span> <span class="nav-text">生成msp证书</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成排序服务创世区块"><span class="nav-number">3.</span> <span class="nav-text">生成排序服务创世区块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成通道配置创世区块"><span class="nav-number">4.</span> <span class="nav-text">生成通道配置创世区块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#定义组织锚节点"><span class="nav-number">5.</span> <span class="nav-text">定义组织锚节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动网络"><span class="nav-number">6.</span> <span class="nav-text">启动网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建并加入频道"><span class="nav-number">7.</span> <span class="nav-text">创建并加入频道</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -437,13 +465,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">77k</span>
+    <span title="站点总字数">80k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:10</span>
+    <span title="站点阅读时长">1:12</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
