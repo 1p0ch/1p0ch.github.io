@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.1p0ch.cn/about/index.html</loc>
+    
+    <lastmod>2020-12-24T12:39:26.172Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.1p0ch.cn/2020/12/24/%E5%8D%8E%E4%B8%BAxctf%E7%AC%AC%E4%BA%8C%E5%9C%BApwn/</loc>
     
     <lastmod>2020-12-24T12:34:12.246Z</lastmod>
@@ -75,13 +82,6 @@
     <loc>https://www.1p0ch.cn/2020/05/16/%E7%BD%91%E9%BC%8E%E6%9D%AF%E9%9D%92%E9%BE%99%E7%BB%84%E5%A4%8D%E7%8E%B0/</loc>
     
     <lastmod>2020-05-20T02:59:26.633Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.1p0ch.cn/about/index.html</loc>
-    
-    <lastmod>2020-05-20T02:47:22.589Z</lastmod>
     
   </url>
   
